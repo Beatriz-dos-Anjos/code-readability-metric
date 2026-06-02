@@ -26,7 +26,7 @@ public class VisitorRegistry {
         
         // Phase 2: Colleagues register their visitors in order
         // visitors.add(new F2EmbeddedAssignVisitor());      // Person 2
-        // visitors.add(new F3OperatorsPerLineVisitor());    // Person 3
+        visitors.add(new F3OperatorsPerLineVisitor());    // Person 3
         // visitors.add(new F4NestingDepthVisitor());        // Person 5
         // visitors.add(new F5ParameterCountVisitor());      // Person 4
     }

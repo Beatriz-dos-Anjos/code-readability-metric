@@ -2,6 +2,7 @@ package readability;
 
 import readability.analyzer.FileAnalyzer;
 import readability.model.FileReport;
+import readability.report.ReportWriter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,12 +22,14 @@ import java.util.stream.Stream;
  * Flow:
  * 1. Discovers all .java files in the target path
  * 2. Analyzes each file with FileAnalyzer
- * 3. Prints summary to console
+ * 3. Calculates final scores
+ * 4. Generates JSON report and prints summary via ReportWriter
  * 
  * @see readability.analyzer.FileAnalyzer
+ * @see readability.report.ReportWriter
  */
 public class Main {
-    
+
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Usage: java -jar legibilidade.jar <path>");
@@ -56,53 +59,29 @@ public class Main {
 
             int total = javaFiles.size();
             System.out.printf("Found %d Java files to analyze%n%n", total);
-            
+
             for (int i = 0; i < total; i++) {
                 Path file = javaFiles.get(i);
                 System.out.printf("[%d/%d] Analyzing: %s%n", (i + 1), total, file.getFileName());
                 reports.add(FileAnalyzer.analyze(file));
             }
 
-            // Print summary
-            printSummary(reports);
+            // Calculate final scores (placeholder until ScoreCalculator is ready)
+            reports.forEach(report -> {
+                if (report.isParseable()) {
+                    double avg = report.getFeatures().stream()
+                        .mapToDouble(f -> f.getScore())
+                        .average()
+                        .orElse(0.0);
+                    report.setFinalScore(avg);
+                }
+            });
+
+            // Write report and print summary
+            ReportWriter.writeReports(reports, Paths.get("report.json"));
 
         } catch (IOException e) {
             System.err.println("Error processing path: " + e.getMessage());
         }
-    }
-    
-    /**
-     * Prints a summary of analyzed files.
-     */
-    private static void printSummary(List<FileReport> reports) {
-        System.out.println("\n=== Analysis Summary ===");
-        
-        List<FileReport> parseableReports = reports.stream()
-            .filter(FileReport::isParseable)
-            .collect(Collectors.toList());
-        
-        if (parseableReports.isEmpty()) {
-            System.out.println("No parseable files found.");
-            return;
-        }
-        
-        // Print all files with F1 score
-        System.out.println("\nFile Scores:");
-        parseableReports.forEach(r -> {
-            if (!r.getFeatures().isEmpty()) {
-                double f1Score = r.getFeatures().get(0).getScore();
-                System.out.printf("  %-50s F1: %6.2f%%%n", 
-                    r.getFilePath(), f1Score);
-            }
-        });
-        
-        // Print average F1 score
-        double avgF1 = parseableReports.stream()
-            .filter(r -> !r.getFeatures().isEmpty())
-            .mapToDouble(r -> r.getFeatures().get(0).getScore())
-            .average()
-            .orElse(0.0);
-        
-        System.out.printf("\nAverage F1 Score: %.2f%%%n", avgF1);
     }
 }

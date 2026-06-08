@@ -14,16 +14,13 @@ import java.util.stream.Stream;
 
 /**
  * Main entry point for the code readability metric analyzer.
- * 
- * Usage: java -jar legibilidade.jar <path>
- *   <path> - a Java file or directory to analyze
- * 
- * Flow:
+ * * Usage: java -jar legibilidade.jar <path>
+ * <path> - a Java file or directory to analyze
+ * * Flow:
  * 1. Discovers all .java files in the target path
  * 2. Analyzes each file with FileAnalyzer
  * 3. Prints summary to console
- * 
- * @see readability.analyzer.FileAnalyzer
+ * * @see readability.analyzer.FileAnalyzer
  */
 public class Main {
     
@@ -86,23 +83,24 @@ public class Main {
             return;
         }
         
-        // Print all files with F1 score
+        // Exibe o Final Score e todos os scores individuais das features (F1, F2...)
         System.out.println("\nFile Scores:");
         parseableReports.forEach(r -> {
-            if (!r.getFeatures().isEmpty()) {
-                double f1Score = r.getFeatures().get(0).getScore();
-                System.out.printf("  %-50s F1: %6.2f%%%n", 
-                    r.getFilePath(), f1Score);
+            System.out.printf("  %s%n", r.getFilePath());
+            System.out.printf("    Final Score: %6.2f%%%n", r.getFinalScore());
+            
+            for (readability.model.FeatureResult feature : r.getFeatures()) {
+                System.out.printf("    - F%d: %6.2f%%%n", feature.getFeatureId(), feature.getScore());
             }
+            System.out.println();
         });
         
-        // Print average F1 score
-        double avgF1 = parseableReports.stream()
-            .filter(r -> !r.getFeatures().isEmpty())
-            .mapToDouble(r -> r.getFeatures().get(0).getScore())
+        // Calcula a média final de todos os arquivos processados
+        double avgFinal = parseableReports.stream()
+            .mapToDouble(FileReport::getFinalScore)
             .average()
             .orElse(0.0);
         
-        System.out.printf("\nAverage F1 Score: %.2f%%%n", avgF1);
+        System.out.printf("Average Final Score: %.2f%%%n", avgFinal);
     }
 }

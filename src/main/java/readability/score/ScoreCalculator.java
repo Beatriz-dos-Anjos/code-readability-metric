@@ -18,6 +18,8 @@ public class ScoreCalculator {
 
     public FileReport calculate(FileReport report) {
         List<FeatureResult> features = report.getFeatures();
+            System.out.println("ScoreCalculator executado");
+
 
         double total = 0.0;
         for (int i = 0; i < features.size(); i++) {

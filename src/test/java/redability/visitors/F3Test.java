@@ -1,8 +1,8 @@
-package legibilidade.visitors;
+package readability.visitors;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
-import legibilidade.model.FeatureResult;
+import readability.model.FeatureResult;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

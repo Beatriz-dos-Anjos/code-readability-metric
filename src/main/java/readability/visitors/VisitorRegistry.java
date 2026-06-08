@@ -21,14 +21,11 @@ public class VisitorRegistry {
     private static final List<FeatureVisitor> visitors = new ArrayList<>();
     
     static {
-        // Phase 1: Person 1 registers F1
         visitors.add(new F1HiddenBracesVisitor());
-        
-        // Phase 2: Colleagues register their visitors in order
-        visitors.add(new F2EmbeddedAssignVisitor());         // Person 2
-        // visitors.add(new F3OperatorsPerLineVisitor());    // Person 3
-        // visitors.add(new F4NestingDepthVisitor());        // Person 5
-        // visitors.add(new F5ParameterCountVisitor());      // Person 4
+        visitors.add(new F2EmbeddedAssignVisitor());        
+        // visitors.add(new F3OperatorsPerLineVisitor());     
+        // visitors.add(new F4NestingDepthVisitor());          
+        visitors.add(new F5ParameterCountVisitor());     
     }
     
     /**
@@ -65,10 +62,6 @@ public class VisitorRegistry {
                 }
             })
             .collect(Collectors.toList());
-        
-        // Phase 1-2: Feature count validation deferred to Phase 3 integration
-        // This allows incremental development: Phase 1 runs with 1 feature,
-        // Phase 2 colleagues register their visitors, Phase 3 validates all 5
         
         return results;
     }

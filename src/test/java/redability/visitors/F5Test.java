@@ -1,10 +1,10 @@
-package legibilidade.visitors;
+package readability.visitors;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
-import legibilidade.model.FeatureResult;
-import legibilidade.model.FileReport;
-import legibilidade.score.ScoreCalculator;
+import readability.model.FeatureResult;
+import readability.model.FileReport;
+import readability.score.ScoreCalculator;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -114,7 +114,7 @@ class F5Test {
     void scoreCalculator_zeroOpportunities_shouldReturnHundred() {
         FeatureResult r = new FeatureResult(0, 0, 0.0); // score not yet set
         FileReport report = new FileReport("dummy.java",
-                List.of(r, r, r, r, r));
+                List.of(r, r, r, r, r), true);
 
         ScoreCalculator calc = new ScoreCalculator();
         calc.calculate(report);
@@ -131,7 +131,7 @@ class F5Test {
         // violations == opportunities → score should be 0
         FeatureResult r = new FeatureResult(5, 5, 0.0);
         FileReport report = new FileReport("dummy.java",
-                List.of(r, r, r, r, r));
+                List.of(r, r, r, r, r), true);
 
         ScoreCalculator calc = new ScoreCalculator();
         calc.calculate(report);
@@ -148,7 +148,7 @@ class F5Test {
         // Bug scenario: more violations than opportunities — must clamp to 0, not go negative
         FeatureResult r = new FeatureResult(10, 5, 0.0);
         FileReport report = new FileReport("dummy.java",
-                List.of(r, r, r, r, r));
+                List.of(r, r, r, r, r), true);
 
         ScoreCalculator calc = new ScoreCalculator();
         calc.calculate(report);
@@ -162,10 +162,10 @@ class F5Test {
     @Test
     void scoreCalculator_finalScore_isArithmeticMeanOfFive() {
         // Mix of known scores to verify the average calculation
-        FeatureResult r100 = new FeatureResult(0, 10, 0.0);  // will become 100
-        FeatureResult r50  = new FeatureResult(5, 10, 0.0);  // will become 50
+        FeatureResult r100 = new FeatureResult(0, 10, 0.0); 
+        FeatureResult r50  = new FeatureResult(5, 10, 0.0); 
         FileReport report  = new FileReport("dummy.java",
-                List.of(r100, r100, r50, r100, r100));
+                List.of(r100, r100, r50, r100, r100), true);
 
         ScoreCalculator calc = new ScoreCalculator();
         calc.calculate(report);

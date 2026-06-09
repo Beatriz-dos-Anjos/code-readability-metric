@@ -1,6 +1,6 @@
 // F4 — caso bom: aninhamento raso. Score esperado: 100.
 // Todos os métodos usam early return para evitar blocos aninhados.
-// Nenhum método ultrapassa profundidade 2 (corpo do método = 1, um nível de lógica = 2).
+// Nenhum método ultrapassa profundidade 2 (corpo do método = 0; primeiro bloco interno = 1).
 public class F4Good {
 
     public String getOrderStatus(Order order) {

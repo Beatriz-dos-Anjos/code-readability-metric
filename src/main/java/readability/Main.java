@@ -66,6 +66,15 @@ public class Main {
             // Print summary
             printSummary(reports);
 
+            // Phase 2 (Person 3): Write JSON report
+            try {
+                Path reportPath = Paths.get("readability-report.json");
+                readability.report.ReportWriter.writeReports(reports, reportPath);
+                System.out.printf("%nJSON report saved to: %s%n", reportPath.toAbsolutePath());
+            } catch (IOException e) {
+                System.err.println("Failed to write JSON report: " + e.getMessage());
+            }
+
         } catch (IOException e) {
             System.err.println("Error processing path: " + e.getMessage());
         }
@@ -80,9 +89,22 @@ public class Main {
         List<FileReport> parseableReports = reports.stream()
             .filter(FileReport::isParseable)
             .collect(Collectors.toList());
+            
+        List<FileReport> unparseableReports = reports.stream()
+            .filter(r -> !r.isParseable())
+            .collect(Collectors.toList());
         
+        System.out.printf("Total files found:      %d%n", reports.size());
+        System.out.printf("Parseable files:        %d%n", parseableReports.size());
+        System.out.printf("Unparseable (skipped):  %d%n", unparseableReports.size());
+        
+        if (!unparseableReports.isEmpty()) {
+            System.out.println("\nUnparseable Files:");
+            unparseableReports.forEach(r -> System.out.printf("  [SKIP] %s%n", r.getFilePath()));
+        }
+
         if (parseableReports.isEmpty()) {
-            System.out.println("No parseable files found.");
+            System.out.println("\nNo parseable files found to calculate scores.");
             return;
         }
         

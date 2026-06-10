@@ -24,7 +24,7 @@ public class F3OperatorsPerLineVisitor extends VoidVisitorAdapter<Void> implemen
 
     // match longer operators first (==, !=, >=, <=, &&, ||, +=, -=, etc.)
     private static final Pattern OPERATOR_PATTERN = Pattern.compile(
-        "(==|!=|>=|<=|&&|\\|\\||\\+=|-=|\\*=|/=|%=?|<<=?|>>=?|>>>?=?|&|\\||\\^|~|\u002B|-|\\*|/|%|>|<|=)"
+        "(==|!=|>=|<=|&&|\\|\\||\\+=|-=|\\*=|/=|%=?|<<=?|>>=?|>>>?=?|&|\\||\\^|~|\\+|-|\\*|/|%|>|<|=)"
     );
 
     @Override

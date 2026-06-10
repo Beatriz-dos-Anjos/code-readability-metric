@@ -1,31 +1,46 @@
 package readability.visitors;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.expr.BinaryExpr;
+import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import readability.model.FeatureResult;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Feature 3: Operators Per Line
- *
+ * 
  * Heuristic:
- * - For each source line, count occurrences of common Java operators.
- * - An "opportunity" is any line that contains at least one operator.
- * - A "violation" is a line that contains more than one operator (threshold = 1).
- *
- * Score formula: 100 * (1 - violations/opportunities) (100% if opportunities == 0)
+ * - Counts operators (Binary and Unary expressions) per line.
+ * - An "opportunity" is any non-empty source line (LOC).
+ * - A "violation" is any line that contains 3 or more operators.
+ * - Score: 100% * (1 - violations/opportunities)
  */
 public class F3OperatorsPerLineVisitor extends VoidVisitorAdapter<Void> implements FeatureVisitor {
 
     private int violations = 0;
     private int opportunities = 0;
+    private final Map<Integer, Integer> lineOperators = new HashMap<>();
 
-    // match longer operators first (==, !=, >=, <=, &&, ||, +=, -=, etc.)
-    private static final Pattern OPERATOR_PATTERN = Pattern.compile(
-        "(==|!=|>=|<=|&&|\\|\\||\\+=|-=|\\*=|/=|%=?|<<=?|>>=?|>>>?=?|&|\\||\\^|~|\\+|-|\\*|/|%|>|<|=)"
-    );
+    @Override
+    public void visit(BinaryExpr n, Void arg) {
+        n.getBegin().ifPresent(pos -> incrementLine(pos.line));
+        super.visit(n, arg);
+    }
+
+    @Override
+    public void visit(UnaryExpr n, Void arg) {
+        n.getBegin().ifPresent(pos -> incrementLine(pos.line));
+        super.visit(n, arg);
+    }
+
+    private void incrementLine(int line) {
+        lineOperators.put(line, lineOperators.getOrDefault(line, 0) + 1);
+    }
 
     @Override
     public FeatureResult analyze(CompilationUnit ast) {
@@ -33,30 +48,51 @@ public class F3OperatorsPerLineVisitor extends VoidVisitorAdapter<Void> implemen
             throw new IllegalArgumentException("CompilationUnit cannot be null");
         }
 
+        this.lineOperators.clear();
         this.violations = 0;
         this.opportunities = 0;
 
-        String src = ast.toString();
-        String[] lines = src.split("\r?\n");
+        // Visit the AST to count operators per line
+        ast.accept(this, null);
 
-        for (String line : lines) {
-            String trimmed = line.trim();
-            if (trimmed.isEmpty()) continue;
-
-            Matcher m = OPERATOR_PATTERN.matcher(trimmed);
-            int count = 0;
-            while (m.find()) {
-                count++;
-            }
-
-            if (count > 0) {
-                opportunities++;
-                if (count > 1) {
-                    violations++;
-                }
+        // Each line with >= 3 operators counts as 1 violation
+        for (int count : lineOperators.values()) {
+            if (count >= 3) {
+                violations++;
             }
         }
 
+        // Opportunities = total non-empty lines (LOC)
+        this.opportunities = countNonEmptyLines(ast);
+
+        return getResult();
+    }
+
+    private int countNonEmptyLines(CompilationUnit ast) {
+        String source = "";
+        if (ast.getStorage().isPresent()) {
+            try {
+                source = Files.readString(ast.getStorage().get().getPath());
+            } catch (IOException e) {
+                // Fallback if file cannot be read
+                source = ast.toString();
+            }
+        } else {
+            // Fallback if source is not available via storage
+            source = ast.toString();
+        }
+
+        String[] lines = source.split("\r?\n");
+        int count = 0;
+        for (String line : lines) {
+            if (!line.trim().isEmpty()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public FeatureResult getResult() {
         double score = (opportunities == 0) ? 100.0 : 100.0 * (1.0 - ((double) violations / opportunities));
         return new FeatureResult(violations, opportunities, score, getFeatureId());
     }

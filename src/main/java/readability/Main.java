@@ -2,6 +2,7 @@ package readability;
 
 import readability.analyzer.FileAnalyzer;
 import readability.model.FileReport;
+import readability.report.ReportWriter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,12 +22,14 @@ import java.util.stream.Stream;
  * Flow:
  * 1. Discovers all .java files in the target path
  * 2. Analyzes each file with FileAnalyzer
- * 3. Prints summary to console
+ * 3. Calculates final scores
+ * 4. Generates JSON report and prints summary via ReportWriter
  * 
  * @see readability.analyzer.FileAnalyzer
+ * @see readability.report.ReportWriter
  */
 public class Main {
-    
+
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Usage: java -jar legibilidade.jar <path>");
@@ -56,15 +59,26 @@ public class Main {
 
             int total = javaFiles.size();
             System.out.printf("Found %d Java files to analyze%n%n", total);
-            
+
             for (int i = 0; i < total; i++) {
                 Path file = javaFiles.get(i);
                 System.out.printf("[%d/%d] Analyzing: %s%n", (i + 1), total, file.getFileName());
                 reports.add(FileAnalyzer.analyze(file));
             }
 
-            // Print summary
-            printSummary(reports);
+            // Calculate final scores (placeholder until ScoreCalculator is ready)
+            reports.forEach(report -> {
+                if (report.isParseable()) {
+                    double avg = report.getFeatures().stream()
+                        .mapToDouble(f -> f.getScore())
+                        .average()
+                        .orElse(0.0);
+                    report.setFinalScore(avg);
+                }
+            });
+
+            // Write report and print summary
+            ReportWriter.writeReports(reports, Paths.get("report.json"));
 
             // Phase 2 (Person 3): Write JSON report
             try {

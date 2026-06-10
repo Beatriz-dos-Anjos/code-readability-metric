@@ -77,13 +77,10 @@ public class Main {
                 }
             });
 
-            // Write report and print summary
-            ReportWriter.writeReports(reports, Paths.get("report.json"));
-
-            // Phase 2 (Person 3): Write JSON report
+            // Phase 2 (Person 3): Write JSON report and Print Console Summary
             try {
                 Path reportPath = Paths.get("readability-report.json");
-                readability.report.ReportWriter.writeReports(reports, reportPath);
+                ReportWriter.writeReports(reports, reportPath);
                 System.out.printf("%nJSON report saved to: %s%n", reportPath.toAbsolutePath());
             } catch (IOException e) {
                 System.err.println("Failed to write JSON report: " + e.getMessage());
@@ -92,53 +89,5 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Error processing path: " + e.getMessage());
         }
-    }
-    
-    /**
-     * Prints a summary of analyzed files.
-     */
-    private static void printSummary(List<FileReport> reports) {
-        System.out.println("\n=== Analysis Summary ===");
-        
-        List<FileReport> parseableReports = reports.stream()
-            .filter(FileReport::isParseable)
-            .collect(Collectors.toList());
-            
-        List<FileReport> unparseableReports = reports.stream()
-            .filter(r -> !r.isParseable())
-            .collect(Collectors.toList());
-        
-        System.out.printf("Total files found:      %d%n", reports.size());
-        System.out.printf("Parseable files:        %d%n", parseableReports.size());
-        System.out.printf("Unparseable (skipped):  %d%n", unparseableReports.size());
-        
-        if (!unparseableReports.isEmpty()) {
-            System.out.println("\nUnparseable Files:");
-            unparseableReports.forEach(r -> System.out.printf("  [SKIP] %s%n", r.getFilePath()));
-        }
-
-        if (parseableReports.isEmpty()) {
-            System.out.println("\nNo parseable files found to calculate scores.");
-            return;
-        }
-        
-        // Print all files with F1 score
-        System.out.println("\nFile Scores:");
-        parseableReports.forEach(r -> {
-            if (!r.getFeatures().isEmpty()) {
-                double f1Score = r.getFeatures().get(0).getScore();
-                System.out.printf("  %-50s F1: %6.2f%%%n", 
-                    r.getFilePath(), f1Score);
-            }
-        });
-        
-        // Print average F1 score
-        double avgF1 = parseableReports.stream()
-            .filter(r -> !r.getFeatures().isEmpty())
-            .mapToDouble(r -> r.getFeatures().get(0).getScore())
-            .average()
-            .orElse(0.0);
-        
-        System.out.printf("\nAverage F1 Score: %.2f%%%n", avgF1);
     }
 }

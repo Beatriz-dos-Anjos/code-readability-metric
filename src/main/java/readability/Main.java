@@ -15,11 +15,9 @@ import java.util.stream.Stream;
 
 /**
  * Main entry point for the code readability metric analyzer.
- * 
- * Usage: java -jar legibilidade.jar <path>
- *   <path> - a Java file or directory to analyze
- * 
- * Flow:
+ * * Usage: java -jar legibilidade.jar <path>
+ * <path> - a Java file or directory to analyze
+ * * Flow:
  * 1. Discovers all .java files in the target path
  * 2. Analyzes each file with FileAnalyzer
  * 3. Calculates final scores

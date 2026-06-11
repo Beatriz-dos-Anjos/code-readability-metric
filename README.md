@@ -62,19 +62,35 @@ java -jar target/legibilidade.jar /caminho/para/projeto/src
 
 ### Exemplo de saída
 ```
-Found 2 Java files to analyze
+Found 4 Java files to analyze
 
-[1/2] Analyzing: F1Good.java
-[2/2] Analyzing: F1Bad.java
+[1/4] Analyzing: F1Bad.java
+[2/4] Analyzing: F1Good.java
+[3/4] Analyzing: F3Bad.java
+[4/4] Analyzing: F3Good.java
 
-=== Analysis Summary ===
+=== RESUMO DA ANÁLISE ===
 
-File Scores:
-  samples/F1Good.java                                F1: 100,00%
-  samples/F1Bad.java                                 F1:   0,00%
+Os 10 piores arquivos por score final:
+Arquivo                                                      | Score
+-------------------------------------------------------------------------
+samples\F1Bad.java                                           | 50,00
+samples\F3Bad.java                                           | 84,38
+samples\F1Good.java                                          | 100,00
+samples\F3Good.java                                          | 100,00
 
-Average F1 Score: 50,00%
+Score médio do repositório: 83,59
+
+Distribuição de scores:
+90-100:       2
+70-89:        1
+50-69:        1
+Abaixo de 50: 0
+=========================
 ```
+
+### Relatório JSON
+Além do resumo no console, o analisador gera um arquivo `report.json` no diretório atual com os detalhes completos de cada arquivo e cada feature (F1 a F5).
 
 ---
 

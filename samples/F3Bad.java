@@ -1,3 +1,4 @@
+// F3 — caso ruim: densidade de operadores alta. Score esperado: próximo de 0.
 public class F3Bad {
 
     // Line with 4 operators: +, *, -, /

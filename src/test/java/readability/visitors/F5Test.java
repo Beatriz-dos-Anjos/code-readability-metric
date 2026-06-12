@@ -145,7 +145,8 @@ class F5Test {
 
     @Test
     void scoreCalculator_violationsExceedOpportunities_shouldClampToZero() {
-        // Bug scenario: more violations than opportunities — must clamp to 0, not go negative
+        // Bug scenario: more violations than opportunities — must clamp to 0, not go
+        // negative
         FeatureResult r = new FeatureResult(10, 5, 0.0);
         FileReport report = new FileReport("dummy.java",
                 List.of(r, r, r, r, r), true);
@@ -162,9 +163,9 @@ class F5Test {
     @Test
     void scoreCalculator_finalScore_isArithmeticMeanOfFive() {
         // Mix of known scores to verify the average calculation
-        FeatureResult r100 = new FeatureResult(0, 10, 0.0); 
-        FeatureResult r50  = new FeatureResult(5, 10, 0.0); 
-        FileReport report  = new FileReport("dummy.java",
+        FeatureResult r100 = new FeatureResult(0, 10, 0.0);
+        FeatureResult r50 = new FeatureResult(5, 10, 0.0);
+        FileReport report = new FileReport("dummy.java",
                 List.of(r100, r100, r50, r100, r100), true);
 
         ScoreCalculator calc = new ScoreCalculator();

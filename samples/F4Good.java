@@ -1,6 +1,6 @@
 // F4 — caso bom: aninhamento raso. Score esperado: 100.
 // Nenhum método ultrapassa profundidade 2 (corpo = 1, um bloco interno = 2).
-// Nenhum bloco dentro de outro bloco — sem for{if{}}, sem if{if{}}.
+// Sem linhas com 3+ operadores.
 public class F4Good {
 
     // depth: body=1, if=2 → max=2 ✅
@@ -48,7 +48,7 @@ public class F4Good {
         return true;
     }
 
-    // depth: body=1, for=2 → max=2 ✅ (no if inside for)
+    // depth: body=1, for=2 → max=2 ✅
     public void printOrderSummary(Order[] orders) {
         if (orders == null) {
             return;
@@ -58,7 +58,7 @@ public class F4Good {
         }
     }
 
-    // depth: body=1, for=2 → max=2 ✅ (continue avoids if-inside-for)
+    // depth: body=1, for=2 → max=2 ✅
     public int countPendingOrders(Order[] orders) {
         if (orders == null) {
             return 0;
@@ -71,12 +71,15 @@ public class F4Good {
     }
 
     // depth: body=1, if=2 → max=2 ✅
+    // Split compound condition into variables to avoid 3+ operators per line
     public boolean validateOrder(Order order) {
         if (order == null) {
             return false;
         }
-        boolean hasId = order.getId() != null && !order.getId().isEmpty();
-        if (!hasId) {
+        String id = order.getId();
+        boolean hasId = id != null;
+        boolean nonEmpty = hasId && !id.isEmpty();
+        if (!nonEmpty) {
             return false;
         }
         if (order.getTotalValue() <= 0) {

@@ -1,22 +1,21 @@
-// F5 — good case: methods with few parameters
-package samples;
-
+// F5 — caso bom: métodos com poucos parâmetros. Score esperado: 100.
+// Sem linhas densas de operadores (max 2 por linha), sem aninhamento profundo.
 public class F5Good {
 
-    // Groups related data into an object instead of listing every field
     public void register(User user) {
         validateUser(user);
         saveUser(user);
     }
 
     public User findById(int id) {
-        // single parameter — perfectly fine
         return null;
     }
 
+    // Split condition into separate variables to avoid dense operator line
     public boolean authenticate(String username, String password) {
-        // two parameters — fine
-        return username != null && password != null;
+        boolean hasUsername = username != null;
+        boolean hasPassword = password != null;
+        return hasUsername && hasPassword;
     }
 
     public void updateEmail(int userId, String newEmail) {
@@ -24,7 +23,6 @@ public class F5Good {
     }
 
     public boolean hasPermission(int userId, String role) {
-        // two parameters — fine
         return false;
     }
 
@@ -42,7 +40,6 @@ public class F5Good {
         // persistence logic here
     }
 
-    // Inner stub so the file compiles standalone
     static class User {
         int id;
         String name;

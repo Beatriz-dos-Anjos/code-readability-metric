@@ -1,33 +1,34 @@
 // F3 — caso ruim: densidade de operadores alta. Score esperado: próximo de 0.
+// Todos os métodos têm no máximo 2 parâmetros para não violar F5.
 public class F3Bad {
 
-    // Line with 4 operators: +, *, -, /
-    public int compute(int a, int b, int c, int d) {
-        return (a + b) * c - d / 2;
+    // 4 operators on one line: +, *, -, /
+    public int compute(int a, int b) {
+        return (a + b) * a - b / 2;
     }
 
-    // Line with 4 operators: +, +, +, +
-    public int sumAll(int a, int b, int c, int d) {
-        return a + b + c + d + 1;
+    // 4 operators on one line: +, +, +, +
+    public int sumAll(int a, int b) {
+        return a + b + a + b + 1;
     }
 
-    // Line with 5 operators: >, &&, <, &&, !=
-    public boolean validate(int x, int y, Object z) {
-        return x > 0 && y < 100 && z != null;
+    // 3 operators on one line: >, &&, <
+    public boolean validate(int x, int y) {
+        return x > 0 && y < 100 && x != y;
     }
 
-    // Line with 4 operators: %, *, +, -
+    // 4 operators on one line: %, *, +, -
     public int calculate(int n, int m) {
         return n % m * 2 + n - 1;
     }
 
-    // Line with 4 operators: /, +, *, -
-    public double formula(double a, double b, double c) {
-        return a / b + b * c - a;
+    // 4 operators on one line: /, +, *, -
+    public double formula(double a, double b) {
+        return a / b + b * a - b;
     }
 
-    // Line with 5 operators: +, *, -, %, /
-    public int complex(int a, int b, int c) {
-        return a + b * c - b % a / 2;
+    // 5 operators on one line: +, *, -, %, /
+    public int complex(int a, int b) {
+        return a + b * a - b % a / 2;
     }
 }

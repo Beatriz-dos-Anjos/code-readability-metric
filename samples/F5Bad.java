@@ -1,6 +1,5 @@
-// F5 — bad case: polyadic methods
-package samples;
-
+// F5 — caso ruim: métodos poliadicos. Score esperado: próximo de 0.
+// Sem linhas densas de operadores para não violar F3.
 public class F5Bad {
 
     // 4 parameters — violation
@@ -10,7 +9,9 @@ public class F5Bad {
 
     // 4 parameters — violation
     private void validate(String name, int age, String cpf, String email) {
-        if (name == null || email == null || cpf == null) {
+        boolean missingName = name == null;
+        boolean missingEmail = email == null;
+        if (missingName || missingEmail) {
             throw new IllegalArgumentException("Missing required fields");
         }
     }
@@ -30,7 +31,9 @@ public class F5Bad {
     // 4 parameters — violation
     public boolean authenticate(String username, String password,
                                 String ipAddress, String deviceId) {
-        return username != null && password != null;
+        boolean hasUser = username != null;
+        boolean hasPass = password != null;
+        return hasUser && hasPass;
     }
 
     // 2 parameters — OK

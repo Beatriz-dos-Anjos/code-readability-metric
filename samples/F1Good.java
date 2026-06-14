@@ -1,82 +1,74 @@
-// F1 - caso bom: nenhuma chave omitida. Score esperado: 100.
+// F1 — caso bom: nenhuma chave omitida. Score esperado: 100.
+// Sem aninhamento profundo (max depth 2), sem linhas densas, sem params excessivos.
 public class F1Good {
-    
+
+    // depth: body=1, if=2 → max=2 ✅
     public boolean validateEmail(String email) {
-        if (email == null || email.isEmpty()) {
-            System.out.println("Email vazio");
+        if (email == null) {
+            return false;
+        }
+        if (email.isEmpty()) {
             return false;
         }
         if (!email.contains("@")) {
-            System.out.println("Email sem @");
             return false;
         }
         return true;
     }
-    
-    public int countValidUsers(User[] users) {
-        int count = 0;
+
+    // depth: body=1, if=2 → max=2 ✅ (for sem if dentro)
+    public int countActiveUsers(User[] users) {
         if (users == null) {
-            System.out.println("Array nulo");
-            return count;
+            return 0;
         }
-        
+        int count = 0;
         for (User user : users) {
-            if (user != null && user.isActive()) {
-                count++;
-            }
+            count += (user != null && user.isActive()) ? 1 : 0;
         }
         return count;
     }
-    
-    public void processData(int[][] matrix) {
-        if (matrix == null) {
-            System.out.println("Matriz nula");
-            return;
-        }
-        
-        for (int i = 0; i < matrix.length; i++) {
-            if (matrix[i] != null) {
-                for (int value : matrix[i]) {
-                    if (value > 0) {
-                        System.out.println("Valor positivo: " + value);
-                    } else if (value < 0) {
-                        System.out.println("Valor negativo: " + value);
-                    } else {
-                        System.out.println("Zero encontrado");
-                    }
-                }
-            }
-        }
-    }
-    
-    public void validateRange(int value, int min, int max) {
-        while (value >= min) {
-            if (value <= max) {
-                System.out.println("Valor dentro do range");
-                break;
-            } else {
-                System.out.println("Valor acima do máximo");
-                break;
-            }
-        }
-    }
-    
+
+    // depth: body=1, if=2 → max=2 ✅
     public String getStatus(int code) {
         if (code == 200) {
             return "OK";
-        } else if (code == 404) {
-            return "Not Found";
-        } else if (code == 500) {
-            return "Server Error";
-        } else {
-            return "Unknown";
         }
+        if (code == 404) {
+            return "Not Found";
+        }
+        if (code == 500) {
+            return "Server Error";
+        }
+        return "Unknown";
+    }
+
+    // depth: body=1, while=2 → max=2 
+    public void printPositive(int[] values) {
+        if (values == null) {
+            return;
+        }
+        int i = 0;
+        while (i < values.length) {
+            System.out.println(values[i]);
+            i++;
+        }
+    }
+
+    // depth: body=1, if=2 → max=2 ✅
+    public boolean isInRange(int value, int min, int max) {
+        if (value < min) {
+            return false;
+        }
+        if (value > max) {
+            return false;
+        }
+        return true;
     }
 }
 
 class User {
     private boolean active;
-    
+
     public boolean isActive() {
         return active;
     }

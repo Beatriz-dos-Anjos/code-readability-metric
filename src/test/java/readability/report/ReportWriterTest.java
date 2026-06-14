@@ -39,7 +39,17 @@ class ReportWriterTest {
         report2.setFinalScore(35.0);
         reports.add(report2);
 
-        ReportWriter.writeReports(reports, outputPath);
+        // Suprimir a saída no console durante o teste capturando o System.out
+        java.io.PrintStream originalOut = System.out;
+        java.io.ByteArrayOutputStream outContent = new java.io.ByteArrayOutputStream();
+        System.setOut(new java.io.PrintStream(outContent));
+
+        try {
+            ReportWriter.writeReports(reports, outputPath);
+        } finally {
+            // Restaurar o System.out original
+            System.setOut(originalOut);
+        }
 
         assertTrue(Files.exists(outputPath));
         String content = Files.readString(outputPath);
@@ -47,6 +57,12 @@ class ReportWriterTest {
         assertTrue(content.contains("File2.java"));
         assertTrue(content.contains("90.0"));
         assertTrue(content.contains("35.0"));
+
+        // Validar que o relatório também foi gerado no console corretamente
+        String consoleOutput = outContent.toString();
+        assertTrue(consoleOutput.contains("=== RESUMO DA ANÁLISE ==="));
+        assertTrue(consoleOutput.contains("File1.java"));
+        assertTrue(consoleOutput.contains("File2.java"));
     }
 
     @Test

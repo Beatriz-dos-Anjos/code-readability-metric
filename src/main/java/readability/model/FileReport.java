@@ -1,5 +1,6 @@
 package readability.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileReport {
@@ -10,7 +11,7 @@ public class FileReport {
 
     public FileReport(String filePath, List<FeatureResult> features, boolean parseable) {
         this.filePath = filePath;
-        this.features = features;
+        this.features = new ArrayList<>(features);
         this.parseable = parseable;
         this.finalScore = 0.0;
     }

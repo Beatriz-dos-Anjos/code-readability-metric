@@ -1,7 +1,3 @@
-// F4 — caso ruim: arrow code. Score esperado: próximo de 0.
-// 6 métodos com profundidade >= 3 (todos são violações).
-// Classes auxiliares com campos públicos — sem getters — para não
-// gerar métodos extras que diluiriam o score.
 public class F4Bad {
 
     // corpo=0 → if=1 → if=2 → for=3 (VIOLAÇÃO)

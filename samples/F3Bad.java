@@ -1,17 +1,34 @@
-// F3 - caso ruim: densidade de operadores alta. Score esperado: próximo de 0
+// F3 — caso ruim: densidade de operadores alta. Score esperado: próximo de 0.
+// Todos os métodos têm no máximo 2 parâmetros para não violar F5.
 public class F3Bad {
-    public double calculate(double a, double b, double c, double d, double e, double f) {
-        double val = (a + b * c) / (d - e % f); 
-        double tax = a * 0.15 + b * 0.10 + c * 0.05; 
-        double discount = (d + e) / (f - a) * 0.1; 
-        double net = val + tax - discount; 
-        return (net * 1.1) / (1 - 0.05) + val; 
+
+    // 4 operators on one line: +, *, -, /
+    public int compute(int a, int b) {
+        return (a + b) * a - b / 2;
     }
 
-    public boolean check(int x, int y, Integer z, int w, int min) {
-        if (x > 0 && y < 10 && z != null && w >= min) { 
-             return true;
-        }
-        return false;
+    // 4 operators on one line: +, +, +, +
+    public int sumAll(int a, int b) {
+        return a + b + a + b + 1;
+    }
+
+    // 3 operators on one line: >, &&, <
+    public boolean validate(int x, int y) {
+        return x > 0 && y < 100 && x != y;
+    }
+
+    // 4 operators on one line: %, *, +, -
+    public int calculate(int n, int m) {
+        return n % m * 2 + n - 1;
+    }
+
+    // 4 operators on one line: /, +, *, -
+    public double formula(double a, double b) {
+        return a / b + b * a - b;
+    }
+
+    // 5 operators on one line: +, *, -, %, /
+    public int complex(int a, int b) {
+        return a + b * a - b % a / 2;
     }
 }

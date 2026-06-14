@@ -1,4 +1,3 @@
-// F3 - caso bom: densidade de operadores baixa. Score esperado: 100.
 public class F3Good {
     public double calculateCompoundInterest(double principal, double rate, int time) {
         double rateAsFraction = rate / 100;

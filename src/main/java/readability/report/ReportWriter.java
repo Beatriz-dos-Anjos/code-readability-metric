@@ -51,14 +51,13 @@ public class ReportWriter {
 
         System.out.println("\n=== RESUMO DA ANÁLISE ===");
         
-        // 10 piores arquivos
-        System.out.println("\nOs 10 piores arquivos por score final:");
+        // Todos os arquivos por ordem de score
+        System.out.println("\nRanking dos arquivos por score final (do pior para o melhor):");
         System.out.printf("%-60s | %-10s%n", "Arquivo", "Score");
         System.out.println("-".repeat(73));
         
         parseableReports.stream()
                 .sorted(Comparator.comparingDouble(FileReport::getFinalScore))
-                .limit(10)
                 .forEach(r -> System.out.printf("%-60s | %-10.2f%n", r.getFilePath(), r.getFinalScore()));
 
         // Score médio

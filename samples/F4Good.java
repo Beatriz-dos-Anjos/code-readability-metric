@@ -1,8 +1,9 @@
 // F4 — caso bom: aninhamento raso. Score esperado: 100.
-// Todos os métodos usam early return para evitar blocos aninhados.
-// Nenhum método ultrapassa profundidade 2 (corpo do método = 0; primeiro bloco interno = 1).
+// Nenhum método ultrapassa profundidade 2 (corpo = 1, um bloco interno = 2).
+// Sem linhas com 3+ operadores.
 public class F4Good {
 
+    // depth: body=1, if=2 → max=2 ✅
     public String getOrderStatus(Order order) {
         if (order == null) {
             return "INVALID";
@@ -16,6 +17,7 @@ public class F4Good {
         return "SHIPPED";
     }
 
+    // depth: body=1, if=2 → max=2 ✅
     public double calculateDiscount(Order order) {
         if (order == null) {
             return 0.0;
@@ -29,6 +31,7 @@ public class F4Good {
         return 0.0;
     }
 
+    // depth: body=1, if=2 → max=2 ✅
     public boolean isEligibleForExpress(Order order) {
         if (order == null) {
             return false;
@@ -39,37 +42,44 @@ public class F4Good {
         if (order.getWeightKg() > 30.0) {
             return false;
         }
-        return order.getDestination().equals("CAPITAL");
+        if (!order.getDestination().equals("CAPITAL")) {
+            return false;
+        }
+        return true;
     }
 
+    // depth: body=1, for=2 → max=2 ✅
     public void printOrderSummary(Order[] orders) {
         if (orders == null) {
-            System.out.println("Nenhum pedido encontrado.");
             return;
         }
         for (Order order : orders) {
-            System.out.println("Pedido: " + order.getId() + " | Status: " + order.getStatus());
+            System.out.println(order.getId() + ": " + order.getStatus());
         }
     }
 
+    // depth: body=1, for=2 → max=2 ✅
     public int countPendingOrders(Order[] orders) {
         if (orders == null) {
             return 0;
         }
         int count = 0;
         for (Order order : orders) {
-            if ("PENDING".equals(order.getStatus())) {
-                count++;
-            }
+            count += "PENDING".equals(order.getStatus()) ? 1 : 0;
         }
         return count;
     }
 
+    // depth: body=1, if=2 → max=2 ✅
+    // Split compound condition into variables to avoid 3+ operators per line
     public boolean validateOrder(Order order) {
         if (order == null) {
             return false;
         }
-        if (order.getId() == null || order.getId().isEmpty()) {
+        String id = order.getId();
+        boolean hasId = id != null;
+        boolean nonEmpty = hasId && !id.isEmpty();
+        if (!nonEmpty) {
             return false;
         }
         if (order.getTotalValue() <= 0) {
@@ -88,11 +98,11 @@ class Order {
     private double weightKg;
     private String destination;
 
-    public String getId() { return id; }
-    public String getStatus() { return status; }
-    public boolean isPaid() { return paid; }
-    public boolean isShipped() { return shipped; }
-    public double getTotalValue() { return totalValue; }
-    public double getWeightKg() { return weightKg; }
+    public String getId()          { return id; }
+    public String getStatus()      { return status; }
+    public boolean isPaid()        { return paid; }
+    public boolean isShipped()     { return shipped; }
+    public double getTotalValue()  { return totalValue; }
+    public double getWeightKg()    { return weightKg; }
     public String getDestination() { return destination; }
 }

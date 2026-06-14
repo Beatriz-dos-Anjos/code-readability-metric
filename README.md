@@ -94,6 +94,31 @@ Além do resumo no console, o analisador gera um arquivo `report.json` no diret�
 
 ---
 
+## 🧪 Como Testar a Ferramenta
+
+Existem duas abordagens para "testar" este projeto, dependendo do seu objetivo:
+
+### 1. Testar o Produto Final (Análise Real)
+Se você quer ver a ferramenta funcionando na prática, calculando as métricas de uma pasta de código e imprimindo a tabela de ranking final (ex: avaliando a pasta `samples`), você deve gerar o executável e rodar o projeto:
+
+```bash
+# 1. Empacota a ferramenta (gera o arquivo .jar)
+mvn package
+
+# 2. Executa a análise na pasta desejada
+java -jar target/legibilidade.jar samples/
+```
+Isso fará o processamento completo e exibirá o **Resumo da Análise** com o ranking de legibilidade na sua tela.
+
+### 2. Testar o Código Fonte (Testes Automatizados)
+Se você é um desenvolvedor que alterou o código interno das métricas e quer garantir que a matemática ou a detecção de bugs continua funcionando, utilize a suíte de testes do Maven:
+
+```bash
+mvn test
+```
+Este comando **não** imprime a tabela do ranking na tela. Ele apenas roda validações silenciosas (Testes Unitários da pasta `src/test/...`) usando os arquivos da pasta `samples` para garantir que o sistema de notas da ferramenta continua confiável e sem erros no código.
+
+---
 ## 📁 Estrutura de Arquivos
 
 ### **Configuração e Construção**

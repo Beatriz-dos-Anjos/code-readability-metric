@@ -1,6 +1,5 @@
 public class F4Bad {
 
-    // corpo=0 → if=1 → if=2 → for=3 (VIOLAÇÃO)
     public void processAllOrders(OrderBatch batch) {
         if (batch != null) {
             if (batch.orders != null) {
@@ -13,7 +12,6 @@ public class F4Bad {
         }
     }
 
-    // corpo=0 → if=1 → for=2 → if=3 (VIOLAÇÃO)
     public double calculateTotalRevenue(OrderBatch[] batches) {
         double total = 0.0;
         if (batches != null) {
@@ -28,7 +26,6 @@ public class F4Bad {
         return total;
     }
 
-    // corpo=0 → for=1 → if=2 → for=3 (VIOLAÇÃO)
     public void applyDiscounts(OrderBatch[] batches) {
         for (OrderBatch batch : batches) {
             if (batch != null) {
@@ -41,7 +38,6 @@ public class F4Bad {
         }
     }
 
-    // corpo=0 → if=1 → if=2 → for=3 (VIOLAÇÃO)
     public int countVipOrdersInRegion(OrderBatch[] batches, String region) {
         int count = 0;
         if (batches != null) {
@@ -56,7 +52,6 @@ public class F4Bad {
         return count;
     }
 
-    // corpo=0 → if=1 → for=2 → if=3 → if=4 (VIOLAÇÃO)
     public void flagLateOrders(OrderBatch batch, int deadlineDays) {
         if (batch != null) {
             for (OrderItem order : batch.orders) {
@@ -69,7 +64,6 @@ public class F4Bad {
         }
     }
 
-    // corpo=0 → if=1 → for=2 → if=3 → for=4 → if=5 (VIOLAÇÃO)
     public String findFirstExpiredOrder(OrderBatch[] batches) {
         if (batches != null) {
             for (OrderBatch batch : batches) {
@@ -86,7 +80,6 @@ public class F4Bad {
     }
 }
 
-// Campos públicos intencionalmente: sem getters = sem métodos extras contados pelo F4.
 class OrderItem {
     public String id;
     public double value;

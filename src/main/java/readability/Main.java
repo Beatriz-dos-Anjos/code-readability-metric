@@ -64,7 +64,7 @@ public class Main {
                 reports.add(FileAnalyzer.analyze(file));
             }
 
-            // Calculate final scores (placeholder until ScoreCalculator is ready)
+            // Calculate final scores 
             reports.forEach(report -> {
                 if (report.isParseable()) {
                     double avg = report.getFeatures().stream()
@@ -75,7 +75,6 @@ public class Main {
                 }
             });
 
-            // Phase 2 (Person 3): Write JSON report and Print Console Summary
             try {
                 Path reportPath = Paths.get("readability-report.json");
                 ReportWriter.writeReports(reports, reportPath);

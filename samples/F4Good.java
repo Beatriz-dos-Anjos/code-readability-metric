@@ -1,9 +1,7 @@
-// F4 — caso bom: aninhamento raso. Score esperado: 100.
-// Nenhum método ultrapassa profundidade 2 (corpo = 1, um bloco interno = 2).
-// Sem linhas com 3+ operadores.
+// F4 - good case: shallow nesting
+// No method exceeds depth 2. No lines contain 3+ operators.
 public class F4Good {
 
-    // depth: body=1, if=2 → max=2 ✅
     public String getOrderStatus(Order order) {
         if (order == null) {
             return "INVALID";
@@ -17,7 +15,6 @@ public class F4Good {
         return "SHIPPED";
     }
 
-    // depth: body=1, if=2 → max=2 ✅
     public double calculateDiscount(Order order) {
         if (order == null) {
             return 0.0;
@@ -31,7 +28,6 @@ public class F4Good {
         return 0.0;
     }
 
-    // depth: body=1, if=2 → max=2 ✅
     public boolean isEligibleForExpress(Order order) {
         if (order == null) {
             return false;
@@ -48,7 +44,6 @@ public class F4Good {
         return true;
     }
 
-    // depth: body=1, for=2 → max=2 ✅
     public void printOrderSummary(Order[] orders) {
         if (orders == null) {
             return;
@@ -58,7 +53,6 @@ public class F4Good {
         }
     }
 
-    // depth: body=1, for=2 → max=2 ✅
     public int countPendingOrders(Order[] orders) {
         if (orders == null) {
             return 0;
@@ -70,8 +64,6 @@ public class F4Good {
         return count;
     }
 
-    // depth: body=1, if=2 → max=2 ✅
-    // Split compound condition into variables to avoid 3+ operators per line
     public boolean validateOrder(Order order) {
         if (order == null) {
             return false;
@@ -98,11 +90,31 @@ class Order {
     private double weightKg;
     private String destination;
 
-    public String getId()          { return id; }
-    public String getStatus()      { return status; }
-    public boolean isPaid()        { return paid; }
-    public boolean isShipped()     { return shipped; }
-    public double getTotalValue()  { return totalValue; }
-    public double getWeightKg()    { return weightKg; }
-    public String getDestination() { return destination; }
+    public String getId() {
+        return id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public boolean isShipped() {
+        return shipped;
+    }
+
+    public double getTotalValue() {
+        return totalValue;
+    }
+
+    public double getWeightKg() {
+        return weightKg;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
 }

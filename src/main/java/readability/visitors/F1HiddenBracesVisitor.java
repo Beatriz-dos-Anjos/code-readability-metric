@@ -36,8 +36,6 @@ public class F1HiddenBracesVisitor extends VoidVisitorAdapter<Void> implements F
 
         if (n.getElseStmt().isPresent()) {
             Statement elseStmt = n.getElseStmt().get();
-            // Do NOT count else-if as a separate opportunity
-            // (it will be counted when we visit the nested IfStmt)
             if (!(elseStmt instanceof IfStmt)) {
                 opportunities++;
                 if (!(elseStmt instanceof BlockStmt)) {

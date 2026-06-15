@@ -22,24 +22,22 @@ class ReportWriterTest {
     void testWriteReports() throws IOException {
         Path outputPath = tempDir.resolve("report.json");
         List<FileReport> reports = new ArrayList<>();
-        
+
         List<FeatureResult> features1 = List.of(
-            new FeatureResult(0, 10, 100.0, 1),
-            new FeatureResult(2, 10, 80.0, 3)
-        );
+                new FeatureResult(0, 10, 100.0, 1),
+                new FeatureResult(2, 10, 80.0, 3));
         FileReport report1 = new FileReport("File1.java", features1, true);
         report1.setFinalScore(90.0);
         reports.add(report1);
 
         List<FeatureResult> features2 = List.of(
-            new FeatureResult(5, 10, 50.0, 1),
-            new FeatureResult(8, 10, 20.0, 3)
-        );
+                new FeatureResult(5, 10, 50.0, 1),
+                new FeatureResult(8, 10, 20.0, 3));
         FileReport report2 = new FileReport("File2.java", features2, true);
         report2.setFinalScore(35.0);
         reports.add(report2);
 
-        // Suprimir a saída no console durante o teste capturando o System.out
+        // Suppress console output during the test by capturing System.out.
         java.io.PrintStream originalOut = System.out;
         java.io.ByteArrayOutputStream outContent = new java.io.ByteArrayOutputStream();
         System.setOut(new java.io.PrintStream(outContent));
@@ -47,7 +45,7 @@ class ReportWriterTest {
         try {
             ReportWriter.writeReports(reports, outputPath);
         } finally {
-            // Restaurar o System.out original
+            // Restore the original System.out.
             System.setOut(originalOut);
         }
 
@@ -58,7 +56,7 @@ class ReportWriterTest {
         assertTrue(content.contains("90.0"));
         assertTrue(content.contains("35.0"));
 
-        // Validar que o relatório também foi gerado no console corretamente
+        // Verify that the report was also generated correctly in the console.
         String consoleOutput = outContent.toString();
         assertTrue(consoleOutput.contains("=== RESUMO DA ANÁLISE ==="));
         assertTrue(consoleOutput.contains("File1.java"));

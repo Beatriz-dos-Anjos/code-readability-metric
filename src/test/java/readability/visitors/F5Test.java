@@ -12,8 +12,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for F5ParameterCountVisitor and ScoreCalculator.
+ * Validates that the visitor correctly detects methods with excessive parameter
+ * counts,
+ * and that the score calculator properly computes violation scores and final
+ * readability metrics.
+ */
 class F5Test {
 
+    /**
+     * Helper method: parses a Java file from the samples directory
+     * and executes the F5ParameterCountVisitor on its AST.
+     */
     private F5ParameterCountVisitor runOn(String filename) throws Exception {
         CompilationUnit cu = StaticJavaParser.parse(new File("samples/" + filename));
         F5ParameterCountVisitor visitor = new F5ParameterCountVisitor();
@@ -21,6 +32,10 @@ class F5Test {
         return visitor;
     }
 
+    /**
+     * Helper method: parses a Java source code string
+     * and executes the F5ParameterCountVisitor on its AST.
+     */
     private F5ParameterCountVisitor runOnSource(String source) {
         CompilationUnit cu = StaticJavaParser.parse(source);
         F5ParameterCountVisitor visitor = new F5ParameterCountVisitor();
@@ -28,6 +43,10 @@ class F5Test {
         return visitor;
     }
 
+    /**
+     * ASSERTS: F5Good.java sample must have zero violations and a perfect score.
+     * This baseline demonstrates code with acceptable parameter counts.
+     */
     @Test
     void f5Good_shouldHaveZeroViolations() throws Exception {
         F5ParameterCountVisitor v = runOn("F5Good.java");
@@ -37,6 +56,12 @@ class F5Test {
         assertEquals(100.0, result.getScore(), 0.001, "F5Good score should be 100");
     }
 
+    /**
+     * ASSERTS: F5Bad.java sample must have at least one violation and a score below
+     * 50.
+     * This baseline demonstrates code with methods having excessive parameter
+     * counts.
+     */
     @Test
     void f5Bad_mostMethodsShouldViolate() throws Exception {
         F5ParameterCountVisitor v = runOn("F5Bad.java");
@@ -46,6 +71,11 @@ class F5Test {
         assertTrue(result.getScore() < 50.0, "F5Bad score should be below 50");
     }
 
+    /**
+     * ASSERTS: A class with no methods must have zero opportunities and score
+     * 100.0,
+     * since there are no methods to validate parameter counts in.
+     */
     @Test
     void noMethods_shouldScoreHundred() {
         String source = """
@@ -58,6 +88,9 @@ class F5Test {
         assertEquals(100.0, result.getScore(), 0.001, "Score should be 100 when opportunities == 0");
     }
 
+    /**
+     * ASSERTS: A method with exactly 3 parameters must not violate and score 100.0.
+     */
     @Test
     void exactlyThreeParams_shouldNotViolate() {
         String source = """
@@ -71,6 +104,9 @@ class F5Test {
         assertEquals(100.0, result.getScore(), 0.001);
     }
 
+    /**
+     * ASSERTS: A method with 4 parameters must count as one violation.
+     */
     @Test
     void fourParams_shouldViolate() {
         String source = """
@@ -83,6 +119,10 @@ class F5Test {
         assertEquals(1, result.getViolations(), "4 parameters should be 1 violation");
     }
 
+    /**
+     * ASSERTS: A constructor with 4 parameters must count as one violation,
+     * applying the same rules as regular methods.
+     */
     @Test
     void constructorWithFourParams_shouldViolate() {
         String source = """
@@ -95,6 +135,10 @@ class F5Test {
         assertEquals(1, result.getViolations(), "Constructor with 4 parameters should be a violation");
     }
 
+    /**
+     * ASSERTS: Among multiple methods with varying parameter counts,
+     * only those exceeding the threshold should be counted as violations.
+     */
     @Test
     void mixedMethods_partialViolations() {
         String source = """
@@ -110,6 +154,10 @@ class F5Test {
         assertEquals(1, result.getViolations());
     }
 
+    /**
+     * ASSERTS: When a feature has zero opportunities (no methods to evaluate),
+     * the calculated score must be 100.0 for all features and the final score.
+     */
     @Test
     void scoreCalculator_zeroOpportunities_shouldReturnHundred() {
         FeatureResult r = new FeatureResult(0, 0, 0.0); // score not yet set
@@ -126,9 +174,12 @@ class F5Test {
         assertEquals(100.0, report.getFinalScore(), 0.001);
     }
 
+    /**
+     * ASSERTS: When violations equal opportunities (all methods violate),
+     * the calculated score must be 0.0 for all features and the final score.
+     */
     @Test
     void scoreCalculator_allViolations_shouldReturnZero() {
-        // violations == opportunities → score should be 0
         FeatureResult r = new FeatureResult(5, 5, 0.0);
         FileReport report = new FileReport("dummy.java",
                 List.of(r, r, r, r, r), true);
@@ -143,10 +194,12 @@ class F5Test {
         assertEquals(0.0, report.getFinalScore(), 0.001);
     }
 
+    /**
+     * ASSERTS: When violations exceed opportunities (more violations than methods),
+     * the calculated score must be clamped to 0.0 and never go negative.
+     */
     @Test
     void scoreCalculator_violationsExceedOpportunities_shouldClampToZero() {
-        // Bug scenario: more violations than opportunities — must clamp to 0, not go
-        // negative
         FeatureResult r = new FeatureResult(10, 5, 0.0);
         FileReport report = new FileReport("dummy.java",
                 List.of(r, r, r, r, r), true);
@@ -160,9 +213,14 @@ class F5Test {
         }
     }
 
+    /**
+     * ASSERTS: The final score must be the arithmetic mean of all five feature
+     * scores,
+     * properly aggregating individual feature evaluations into a single readability
+     * metric.
+     */
     @Test
     void scoreCalculator_finalScore_isArithmeticMeanOfFive() {
-        // Mix of known scores to verify the average calculation
         FeatureResult r100 = new FeatureResult(0, 10, 0.0);
         FeatureResult r50 = new FeatureResult(5, 10, 0.0);
         FileReport report = new FileReport("dummy.java",
@@ -171,7 +229,6 @@ class F5Test {
         ScoreCalculator calc = new ScoreCalculator();
         calc.calculate(report);
 
-        // Expected: (100 + 100 + 50 + 100 + 100) / 5 = 90
         assertEquals(90.0, report.getFinalScore(), 0.001,
                 "Final score should be the arithmetic mean of all five feature scores");
     }

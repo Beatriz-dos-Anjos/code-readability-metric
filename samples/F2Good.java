@@ -1,12 +1,12 @@
-// F2 — caso bom: atribuições separadas da lógica condicional. Score esperado: 100.
-// Sem aninhamento profundo (max depth 2), sem linhas densas, sem params excessivos.
+
+// F2 - good case: assignments are separated from conditional logic
+// No deep nesting, no dense lines, no excessive parameters.
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class F2Good {
 
-    // depth: body=1, while=2 → max=2 ✅
     public void processFile(String path) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(path));
         String linha = reader.readLine();
@@ -17,7 +17,6 @@ public class F2Good {
         reader.close();
     }
 
-    // depth: body=1, for=2 → max=2 ✅ (ternary avoids if-inside-for)
     public int somarPositivos(int[] valores) {
         int soma = 0;
         for (int i = 0; i < valores.length; i++) {
@@ -27,7 +26,6 @@ public class F2Good {
         return soma;
     }
 
-    // depth: body=1, for=2 → max=2 ✅ (early return via flag, no if-inside-for)
     public String buscarPrimeiro(String[] itens, String prefixo) {
         String encontrado = null;
         for (int i = 0; i < itens.length; i++) {
@@ -37,7 +35,6 @@ public class F2Good {
         return encontrado;
     }
 
-    // depth: body=1, if=2 → max=2 ✅
     public boolean validarIdade(int idade) {
         if (idade < 0) {
             return false;

@@ -31,14 +31,12 @@ public class ReportWriter {
         if (reports == null) throw new IllegalArgumentException("reports cannot be null");
         if (outputPath == null) throw new IllegalArgumentException("outputPath cannot be null");
 
-        // Produto 1 - JSON completo
         String json = GSON.toJson(reports);
         if (outputPath.getParent() != null) {
             Files.createDirectories(outputPath.getParent());
         }
         Files.writeString(outputPath, json);
 
-        // Produto 2 - Resumo no console
         printConsoleSummary(reports);
     }
 
@@ -49,43 +47,43 @@ public class ReportWriter {
 
         long unparseableCount = reports.size() - parseableReports.size();
 
-        System.out.println("\n=== RESUMO DA ANÁLISE ===");
+        System.out.println("\n=== ANALYSIS SUMMARY ===");
         
-        // Todos os arquivos por ordem de score
-        System.out.println("\nRanking dos arquivos por score final (do pior para o melhor):");
-        System.out.printf("%-60s | %-10s%n", "Arquivo", "Score");
+        // Order by score
+        System.out.println("\nRanking of archives by final score (worst to best):");
+        System.out.printf("%-60s | %-10s%n", "Archive", "Score");
         System.out.println("-".repeat(73));
         
         parseableReports.stream()
                 .sorted(Comparator.comparingDouble(FileReport::getFinalScore))
                 .forEach(r -> System.out.printf("%-60s | %-10.2f%n", r.getFilePath(), r.getFinalScore()));
 
-        // Score médio
+        // AVG score
         double averageScore = parseableReports.stream()
                 .mapToDouble(FileReport::getFinalScore)
                 .average()
                 .orElse(0.0);
         
-        System.out.printf("\nScore médio do repositório: %.2f%n", averageScore);
+        System.out.printf("\nRepository's average score: %.2f%n", averageScore);
 
-        // Contagem por faixa
+        // Counting by range
         Map<String, Long> distribution = parseableReports.stream()
                 .collect(Collectors.groupingBy(r -> {
                     double score = r.getFinalScore();
                     if (score >= 90) return "90-100";
                     if (score >= 70) return "70-89";
                     if (score >= 50) return "50-69";
-                    return "Abaixo de 50";
+                    return "Below 50";
                 }, Collectors.counting()));
 
-        System.out.println("\nDistribuição de scores:");
+        System.out.println("\nScore's Distribution:");
         System.out.printf("90-100:       %d%n", distribution.getOrDefault("90-100", 0L));
         System.out.printf("70-89:        %d%n", distribution.getOrDefault("70-89", 0L));
         System.out.printf("50-69:        %d%n", distribution.getOrDefault("50-69", 0L));
-        System.out.printf("Abaixo de 50: %d%n", distribution.getOrDefault("Abaixo de 50", 0L));
+        System.out.printf("Abaixo de 50: %d%n", distribution.getOrDefault("Below 50", 0L));
 
         if (unparseableCount > 0) {
-            System.out.printf("\nArquivos não processados (erro de parse): %d%n", unparseableCount);
+            System.out.printf("\nArchives not processed (parse error): %d%n", unparseableCount);
         }
         System.out.println("=".repeat(25) + "\n");
     }

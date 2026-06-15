@@ -9,18 +9,36 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for F3OperatorsPerLineVisitor.
+ * Validates that the visitor correctly detects lines with excessive operator
+ * density
+ * and calculates appropriate violation counts and readability scores.
+ */
 class F3Test {
 
+    /**
+     * Helper method: parses a Java file from the samples directory
+     * and executes the F3OperatorsPerLineVisitor on its AST.
+     */
     private FeatureResult runOn(String filename) throws Exception {
         CompilationUnit cu = StaticJavaParser.parse(new File("samples/" + filename));
         return new F3OperatorsPerLineVisitor().analyze(cu);
     }
 
+    /**
+     * Helper method: parses a Java source code string
+     * and executes the F3OperatorsPerLineVisitor on its AST.
+     */
     private FeatureResult runOnSource(String source) {
         CompilationUnit cu = StaticJavaParser.parse(source);
         return new F3OperatorsPerLineVisitor().analyze(cu);
     }
 
+    /**
+     * ASSERTS: F3Good.java sample must have zero violations and a perfect score.
+     * This baseline demonstrates code with acceptable operator density per line.
+     */
     @Test
     void f3Good_shouldHaveZeroViolations() throws Exception {
         FeatureResult result = runOn("F3Good.java");
@@ -29,6 +47,12 @@ class F3Test {
         assertEquals(100.0, result.getScore(), 0.001, "F3Good score should be 100");
     }
 
+    /**
+     * ASSERTS: F3Bad.java sample must have at least one violation and a score below
+     * 50.
+     * This baseline demonstrates code with dense lines exceeding the operator
+     * threshold.
+     */
     @Test
     void f3Bad_shouldHaveViolationsAndLowScore() throws Exception {
         FeatureResult result = runOn("F3Bad.java");
@@ -37,6 +61,10 @@ class F3Test {
         assertTrue(result.getScore() < 50.0, "F3Bad score should be below 50");
     }
 
+    /**
+     * ASSERTS: Code with no operators must have zero violations and score 100.0,
+     * since there are no dense lines to detect.
+     */
     @Test
     void noOperators_shouldScoreHundred() {
         FeatureResult result = runOnSource("""
@@ -51,9 +79,12 @@ class F3Test {
         assertEquals(100.0, result.getScore(), 0.001);
     }
 
+    /**
+     * ASSERTS: A single line with 3 or more operators must count as exactly one
+     * violation.
+     */
     @Test
     void denseLineShouldCountAsOneViolation() {
-        // One line with 4 operators — should be exactly 1 violation regardless of count
         FeatureResult result = runOnSource("""
                 class Dense {
                     int compute(int a, int b, int c, int d) {
@@ -66,6 +97,9 @@ class F3Test {
                 "A line with >= 3 operators counts as exactly 1 violation");
     }
 
+    /**
+     * ASSERTS: Lines with 2 or fewer operators must not violate and score 100.0.
+     */
     @Test
     void twoOperatorsPerLine_shouldNotViolate() {
         FeatureResult result = runOnSource("""

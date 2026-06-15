@@ -1,6 +1,6 @@
-// F1 - caso ruim: chaves omitidas sistematicamente. Score esperado: próximo de 0.
+// F1 - bad case: braces are systematically omitted
 public class F1Bad {
-    
+
     public boolean validateEmail(String email) {
         if (email == null || email.isEmpty())
             System.out.println("Email vazio");
@@ -8,23 +8,23 @@ public class F1Bad {
             System.out.println("Email sem @");
         return email != null && email.contains("@");
     }
-    
+
     public int countValidUsers(User[] users) {
         int count = 0;
         if (users == null)
             System.out.println("Array nulo");
-        
+
         for (User user : users)
             if (user != null && user.isActive())
                 count++;
-        
+
         return count;
     }
-    
+
     public void processData(int[][] matrix) {
         if (matrix == null)
             System.out.println("Matriz nula");
-        
+
         for (int i = 0; i < matrix.length; i++)
             if (matrix[i] != null)
                 for (int value : matrix[i])
@@ -35,7 +35,7 @@ public class F1Bad {
                     else
                         System.out.println("Zero encontrado");
     }
-    
+
     public void validateRange(int value, int min, int max) {
         while (value >= min)
             if (value <= max)
@@ -43,7 +43,7 @@ public class F1Bad {
             else
                 System.out.println("Valor acima do máximo");
     }
-    
+
     public String getStatus(int code) {
         if (code == 200)
             return "OK";
@@ -58,7 +58,7 @@ public class F1Bad {
 
 class User {
     private boolean active;
-    
+
     public boolean isActive() {
         return active;
     }

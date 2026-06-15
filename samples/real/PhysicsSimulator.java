@@ -1,3 +1,5 @@
+// Expected score: Below 50
+// Reason: Massive complexity, huge methods, and terrible naming conventions.
 public class PhysicsSimulator {
     public double calculateTrajectory(double v, double theta, double g, double h, double w, double f, double m, double t) {
         double x;

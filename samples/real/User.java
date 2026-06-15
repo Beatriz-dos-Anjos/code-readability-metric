@@ -1,3 +1,5 @@
+// Expected score: 90-100
+// Reason: Simple domain entity with standard getters/setters.
 public class User {
     private String name;
     private int age;

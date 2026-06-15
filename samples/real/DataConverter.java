@@ -1,3 +1,5 @@
+// Expected score: Below 50
+// Reason: Unreadable conversion logic.
 public class DataConverter {
     public void convert(int[] data) {
         int i = 0;

@@ -1,3 +1,5 @@
+// Expected score: Below 50
+// Reason: Terrible formatting, obscure naming, and high complexity.
 public class NightmareCode {
     public void run(int a, int b, int c, int d, int e, int f) {
         int k = 0;

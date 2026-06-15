@@ -1,3 +1,5 @@
+// Expected score: Below 50
+// Reason: Overly complex stream operations or unreadable functional programming.
 public class StreamTransformer {
     public void transformStream(byte[] in, byte[] out, int len, boolean encrypt, boolean compress, int key, int lvl, int block, int pad) {
         int i = 0;

@@ -1,3 +1,5 @@
+// Expected score: 50-69
+// Reason: Legacy code with somewhat confusing logic and structure.
 public class LegacyParser {
     public void parse(String text) {
         int len;

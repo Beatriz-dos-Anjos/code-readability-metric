@@ -1,3 +1,5 @@
+// Expected score: 70-89
+// Reason: Moderate complexity due to math operations.
 public class ModerateMath {
     public double calculateArea(double radius, double height) {
         if (radius > 0) {

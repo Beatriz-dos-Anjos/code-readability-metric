@@ -1,3 +1,5 @@
+// Expected score: Below 50
+// Reason: Huge and unreadable validation logic.
 public class SecurityValidator {
     public boolean validateUserCredentials(String u, String p, String t, boolean m, int r, String i, String s, String c, int d) {
         boolean v = false;

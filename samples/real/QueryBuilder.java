@@ -1,3 +1,5 @@
+// Expected score: 70-89
+// Reason: Medium complexity string building and method chaining.
 public class QueryBuilder {
     private String select;
     private String from;

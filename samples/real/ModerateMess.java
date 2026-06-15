@@ -1,3 +1,5 @@
+// Expected score: Below 50
+// Reason: Messy code with multiple code smells and formatting issues.
 public class ModerateMess {
     public void run(int a, int b, int c, int d, int e, int f, int g) {
         if (a > 0)

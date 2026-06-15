@@ -1,3 +1,5 @@
+// Expected score: Below 50
+// Reason: God class with too much logic clustered together.
 public class MonsterManager {
     public int executeChaos(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, int l) {
         int result = 0;

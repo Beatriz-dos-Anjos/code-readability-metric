@@ -1,3 +1,5 @@
+// Expected score: 50-69
+// Reason: Complex string parsing logic.
 public class StringParser {
     public void processLine(String line) {
         int pointer = 0;

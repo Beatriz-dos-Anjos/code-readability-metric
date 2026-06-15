@@ -80,7 +80,7 @@ public class ReportWriter {
         System.out.printf("90-100:       %d%n", distribution.getOrDefault("90-100", 0L));
         System.out.printf("70-89:        %d%n", distribution.getOrDefault("70-89", 0L));
         System.out.printf("50-69:        %d%n", distribution.getOrDefault("50-69", 0L));
-        System.out.printf("Abaixo de 50: %d%n", distribution.getOrDefault("Below 50", 0L));
+        System.out.printf("Below 50:     %d%n", distribution.getOrDefault("Below 50", 0L));
 
         if (unparseableCount > 0) {
             System.out.printf("\nArchives not processed (parse error): %d%n", unparseableCount);

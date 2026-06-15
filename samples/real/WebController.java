@@ -1,3 +1,5 @@
+// Expected score: 90-100
+// Reason: Clean web controller with well-defined endpoints.
 public class WebController {
     @GetMapping("/users")
     public List<User> getUsers() {

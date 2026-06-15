@@ -1,3 +1,5 @@
+// Expected score: 70-89
+// Reason: Tree/graph search algorithm with medium complexity.
 public class NodeSearch {
     public Node find(Node root, String target) {
         if (root != null) {

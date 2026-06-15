@@ -1,3 +1,5 @@
+// Expected score: 50-69
+// Reason: Deeply nested validation logic reduces readability.
 public class DeepValidator {
     public boolean isValid(int x) {
         boolean valid = false;

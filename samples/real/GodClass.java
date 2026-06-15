@@ -1,3 +1,5 @@
+// Expected score: Below 50
+// Reason: Classic God Class antipattern doing too many things.
 public class GodClass {
     public void doEverything(int a, int b, int c, int d, int e, int f, int g, int h, int i) {
         int x;

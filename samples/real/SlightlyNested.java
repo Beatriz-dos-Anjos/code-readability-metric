@@ -1,3 +1,5 @@
+// Expected score: 70-89
+// Reason: Penalized for having somewhat nested control structures.
 public class SlightlyNested {
     public void processItems(List<String> items) {
         for (String item : items) {

@@ -9,8 +9,18 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for F2EmbeddedAssignVisitor.
+ * Validates that the visitor correctly detects assignment expressions embedded
+ * in conditional statements and calculates appropriate violation counts and
+ * scores.
+ */
 class F2Test {
 
+    /**
+     * Helper method: parses a Java file from the samples directory
+     * and executes the F2EmbeddedAssignVisitor on its AST.
+     */
     private F2EmbeddedAssignVisitor runOn(String filename) throws Exception {
         CompilationUnit cu = StaticJavaParser.parse(new File("samples/" + filename));
         F2EmbeddedAssignVisitor visitor = new F2EmbeddedAssignVisitor();
@@ -18,6 +28,10 @@ class F2Test {
         return visitor;
     }
 
+    /**
+     * Helper method: parses a Java source code string
+     * and executes the F2EmbeddedAssignVisitor on its AST.
+     */
     private F2EmbeddedAssignVisitor runOnSource(String source) {
         CompilationUnit cu = StaticJavaParser.parse(source);
         F2EmbeddedAssignVisitor visitor = new F2EmbeddedAssignVisitor();
@@ -25,6 +39,10 @@ class F2Test {
         return visitor;
     }
 
+    /**
+     * ASSERTS: F2Good.java sample must have zero violations and a perfect score.
+     * This baseline demonstrates code with no embedded assignments in conditionals.
+     */
     @Test
     void f2Good_shouldHaveZeroViolations() throws Exception {
         F2EmbeddedAssignVisitor v = runOn("F2Good.java");
@@ -34,6 +52,12 @@ class F2Test {
         assertEquals(100.0, result.getScore(), 0.001, "F2Good score should be 100");
     }
 
+    /**
+     * ASSERTS: F2Bad.java sample must have at least one violation and a score below
+     * 50.
+     * This baseline demonstrates code with embedded assignments in conditional
+     * statements.
+     */
     @Test
     void f2Bad_shouldHaveViolationsAndLowScore() throws Exception {
         F2EmbeddedAssignVisitor v = runOn("F2Bad.java");
@@ -43,6 +67,10 @@ class F2Test {
         assertTrue(result.getScore() < 50.0, "F2Bad score should be below 50");
     }
 
+    /**
+     * ASSERTS: Code with no conditional statements must have zero opportunities
+     * and score 100.0, since there are no conditionals to validate.
+     */
     @Test
     void noConditionals_shouldScoreHundred() {
         String source = """
@@ -59,6 +87,10 @@ class F2Test {
         assertEquals(100.0, result.getScore(), 0.001, "Score should be 100 when opportunities == 0");
     }
 
+    /**
+     * ASSERTS: Code with clean conditionals (no embedded assignments) must have
+     * zero violations and score 100.0, regardless of conditional complexity.
+     */
     @Test
     void cleanConditionals_shouldScoreHundred() {
         String source = """
@@ -79,9 +111,12 @@ class F2Test {
         assertEquals(100.0, result.getScore(), 0.001);
     }
 
+    /**
+     * ASSERTS: Code with an assignment expression embedded in a while condition
+     * must count as at least one violation.
+     */
     @Test
     void embeddedAssignInWhile_shouldCountAsViolation() {
-        // while ((line = reader.readLine()) != null) pattern
         String source = """
                 import java.io.*;
                 class Reader {

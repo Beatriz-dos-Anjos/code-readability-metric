@@ -28,7 +28,7 @@ public class FeatureResult {
     public FeatureResult(int violations, int opportunities, double score, int featureId) {
         this.violations = violations;
         this.opportunities = opportunities;
-        this.score = Math.max(0.0, Math.min(100.0, score)); // Clamp to [0, 100]
+        this.score = Math.max(0.0, Math.min(100.0, score));
         this.featureId = featureId;
     }
 

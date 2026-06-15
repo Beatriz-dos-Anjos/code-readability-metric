@@ -1,8 +1,7 @@
-// F1 — caso bom: nenhuma chave omitida. Score esperado: 100.
-// Sem aninhamento profundo (max depth 2), sem linhas densas, sem params excessivos.
+// F1 — caso bom: nenhuma chave omitida
+// Sem aninhamento profundo, sem linhas densas, sem parametros excessivos
 public class F1Good {
 
-    // depth: body=1, if=2 → max=2 ✅
     public boolean validateEmail(String email) {
         if (email == null) {
             return false;
@@ -16,7 +15,6 @@ public class F1Good {
         return true;
     }
 
-    // depth: body=1, if=2 → max=2 ✅ (for sem if dentro)
     public int countActiveUsers(User[] users) {
         if (users == null) {
             return 0;
@@ -28,7 +26,6 @@ public class F1Good {
         return count;
     }
 
-    // depth: body=1, if=2 → max=2 ✅
     public String getStatus(int code) {
         if (code == 200) {
             return "OK";
@@ -42,7 +39,6 @@ public class F1Good {
         return "Unknown";
     }
 
-    // depth: body=1, while=2 → max=2 
     public void printPositive(int[] values) {
         if (values == null) {
             return;
@@ -54,7 +50,6 @@ public class F1Good {
         }
     }
 
-    // depth: body=1, if=2 → max=2 ✅
     public boolean isInRange(int value, int min, int max) {
         if (value < min) {
             return false;

@@ -1,4 +1,4 @@
-// F1 - caso ruim: chaves omitidas sistematicamente. Score esperado: próximo de 0.
+// F1 - caso ruim: chaves omitidas sistematicamente
 public class F1Bad {
     
     public boolean validateEmail(String email) {

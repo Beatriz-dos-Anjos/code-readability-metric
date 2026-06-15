@@ -43,10 +43,8 @@ public class FileAnalyzer {
         try {
             CompilationUnit ast = StaticJavaParser.parse(path);
 
-            // Execute all registered Feature Visitors
             var features = VisitorRegistry.analyzeFile(ast);
 
-            // Create report with all feature results
             FileReport report = new FileReport(
                 path.toString(),
                 features,

@@ -1,5 +1,5 @@
-// F5 — caso bom: métodos com poucos parâmetros
-// Sem linhas densas de operadores, sem aninhamento profundo
+// F5 - good case: methods with few parameters
+// No dense operator lines, no deep nesting
 public class F5Good {
 
     public void register(User user) {

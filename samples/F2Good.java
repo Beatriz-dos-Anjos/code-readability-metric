@@ -1,5 +1,6 @@
-// F2 — caso bom: atribuições separadas da lógica condicional
-// Sem aninhamento profundo, sem linhas densas, sem parametros excessivos.
+
+// F2 - good case: assignments are separated from conditional logic
+// No deep nesting, no dense lines, no excessive parameters.
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

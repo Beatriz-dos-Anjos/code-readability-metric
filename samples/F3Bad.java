@@ -1,5 +1,5 @@
-// F3 — caso ruim: densidade de operadores alta
-// Todos os métodos têm no máximo 2 parâmetros para não violar F5.
+// F3 - bad case: high operator density
+// All methods have at most 2 parameters so they do not violate F5.
 public class F3Bad {
 
     public int compute(int a, int b) {

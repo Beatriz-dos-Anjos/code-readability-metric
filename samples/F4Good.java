@@ -1,5 +1,5 @@
-// F4 — caso bom: aninhamento raso
-// Nenhum método ultrapassa profundidade 2. Sem linhas com 3+ operadores.
+// F4 - good case: shallow nesting
+// No method exceeds depth 2. No lines contain 3+ operators.
 public class F4Good {
 
     public String getOrderStatus(Order order) {
@@ -90,11 +90,31 @@ class Order {
     private double weightKg;
     private String destination;
 
-    public String getId()          { return id; }
-    public String getStatus()      { return status; }
-    public boolean isPaid()        { return paid; }
-    public boolean isShipped()     { return shipped; }
-    public double getTotalValue()  { return totalValue; }
-    public double getWeightKg()    { return weightKg; }
-    public String getDestination() { return destination; }
+    public String getId() {
+        return id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public boolean isShipped() {
+        return shipped;
+    }
+
+    public double getTotalValue() {
+        return totalValue;
+    }
+
+    public double getWeightKg() {
+        return weightKg;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
 }

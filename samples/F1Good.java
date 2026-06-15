@@ -1,5 +1,5 @@
-// F1 — caso bom: nenhuma chave omitida
-// Sem aninhamento profundo, sem linhas densas, sem parametros excessivos
+// F1 - good case: no missing braces
+// No deep nesting, no dense lines, no excessive parameters
 public class F1Good {
 
     public boolean validateEmail(String email) {

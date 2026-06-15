@@ -1,5 +1,5 @@
-// F5 — caso ruim: métodos poliadicos
-// Sem linhas densas de operadores para não violar F3
+// F5 - bad case: polyadic methods
+// No dense operator lines to avoid violating F3
 public class F5Bad {
 
     public void register(String name, int age, String cpf, String email) {

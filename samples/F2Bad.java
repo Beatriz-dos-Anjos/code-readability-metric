@@ -1,4 +1,5 @@
-// F2 - caso ruim: atribuições embutidas em condicionais
+
+// F2 - bad case: assignments embedded in conditionals
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

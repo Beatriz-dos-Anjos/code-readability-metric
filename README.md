@@ -1,66 +1,66 @@
-# Code Readability Metric - Analisador de Legibilidade de Código Java
+# Code Readability Metric - Java Code Readability Analyzer
 
-Um analisador de código Java que mede a legibilidade através de 5 métricas diferentes (F1 a F5). Este projeto foi desenvolvido em fases colaborativas, começando com a Feature 1 (F1) que detecta omissão de chaves em estruturas de controle.
+A Java code analyzer that measures readability through 5 different metrics (F1 to F5). This project was developed in collaborative phases, starting with Feature 1 (F1), which detects missing braces in control flow structures.
 
-## 📋 Pré-requisitos
+## 1. Prerequisites
 
-Antes de executar o projeto, você precisa ter instalado:
+Before running the project, make sure you have the following installed:
 
-### 1. **Java Development Kit (JDK) 17 ou superior**
+### 1. **Java Development Kit (JDK) 17 or higher**
    - **Download:** https://www.oracle.com/java/technologies/downloads/
-   - **Verificar instalação:**
+   - **Verify installation:**
      ```bash
      java -version
-     # Deve mostrar versão 17 ou superior
+     # Should show version 17 or higher
      ```
 
-### 2. **Apache Maven 3.8 ou superior**
+### 2. **Apache Maven 3.8 or higher**
    - **Download:** https://maven.apache.org/download.cgi
-   - **Instalação (Linux/Mac):**
+   - **Installation (Linux/Mac):**
      ```bash
-     # Extrair o arquivo
+     # Extract the archive
      tar -xzf apache-maven-3.x.x-bin.tar.gz
-     # Adicionar ao PATH
-     export PATH=$PATH:/caminho/para/apache-maven-3.x.x/bin
+     # Add to PATH
+     export PATH=$PATH:/path/to/apache-maven-3.x.x/bin
      ```
-   - **Verificar instalação:**
+   - **Verify installation:**
      ```bash
      mvn -version
-     # Deve mostrar versão 3.8 ou superior
+     # Should show version 3.8 or higher
      ```
 
 ---
 
-## 🚀 Instalação e Compilação
+## 2. Installation and Build
 
-### 1. Clonar ou baixar o projeto
+### 1. Clone or download the project
 ```bash
-git clone <URL-do-repositorio>
+git clone <repository-URL>
 cd code-readability-metric
 ```
 
-### 2. Compilar o projeto
+### 2. Build the project
 ```bash
 mvn clean package
 ```
 
-Isso gera o arquivo `target/legibilidade.jar` - um  jar executável com todas as dependências incluídas.
+This generates `target/legibilidade.jar` — an executable fat JAR with all dependencies bundled in.
 
 ---
 
-## 🎯 Como Usar
+## 3. Usage
 
-### Analisar um arquivo único
+### Analyze a single file
 ```bash
 java -jar target/legibilidade.jar samples/F1Good.java
 ```
 
-### Analisar um diretório (recursivo)
+### Analyze a directory (recursive)
 ```bash
-java -jar target/legibilidade.jar /caminho/para/projeto/src
+java -jar target/legibilidade.jar /path/to/project/src
 ```
 
-### Exemplo de saída
+### Example output
 ```
 Found 4 Java files to analyze
 
@@ -69,197 +69,199 @@ Found 4 Java files to analyze
 [3/4] Analyzing: F3Bad.java
 [4/4] Analyzing: F3Good.java
 
-=== RESUMO DA ANÁLISE ===
+=== ANALYSIS SUMMARY ===
 
-Os 10 piores arquivos por score final:
-Arquivo                                                      | Score
+Top 10 worst files by final score:
+File                                                         | Score
 -------------------------------------------------------------------------
-samples\F1Bad.java                                           | 50,00
-samples\F3Bad.java                                           | 84,38
-samples\F1Good.java                                          | 100,00
-samples\F3Good.java                                          | 100,00
+samples\F1Bad.java                                           | 50.00
+samples\F3Bad.java                                           | 84.38
+samples\F1Good.java                                          | 100.00
+samples\F3Good.java                                          | 100.00
 
-Score médio do repositório: 83,59
+Repository average score: 83.59
 
-Distribuição de scores:
-90-100:       2
-70-89:        1
-50-69:        1
-Abaixo de 50: 0
+Score distribution:
+90-100:    2
+70-89:     1
+50-69:     1
+Below 50:  0
 =========================
 ```
 
-### Relatório JSON
-Além do resumo no console, o analisador gera um arquivo `report.json` no diretório atual com os detalhes completos de cada arquivo e cada feature (F1 a F5).
+### JSON Report
+In addition to the console summary, the analyzer generates a `report.json` file in the current directory with full details for each file and each feature (F1 to F5).
 
 ---
 
-## 🧪 Como Testar a Ferramenta
+## 4. How to Test the Tool
 
-Existem duas abordagens para "testar" este projeto, dependendo do seu objetivo:
+There are two approaches to "testing" this project, depending on your goal:
 
-### 1. Testar o Produto Final (Análise Real)
-Se você quer ver a ferramenta funcionando na prática, calculando as métricas de uma pasta de código e imprimindo a tabela de ranking final (ex: avaliando a pasta `samples`), você deve gerar o executável e rodar o projeto:
+### 1. Test the Final Product (Real Analysis)
+If you want to see the tool in action — computing metrics for a code folder and printing the final ranking table (e.g., evaluating the `samples` folder) — build the executable and run the project:
 
 ```bash
-# 1. Empacota a ferramenta (gera o arquivo .jar)
+# 1. Package the tool (generates the .jar file)
 mvn package
 
-# 2. Executa a análise na pasta desejada
+# 2. Run the analysis on the desired folder
 java -jar target/legibilidade.jar samples/
 ```
-Isso fará o processamento completo e exibirá o **Resumo da Análise** com o ranking de legibilidade na sua tela.
 
-### 2. Testar o Código Fonte (Testes Automatizados)
-Se você é um desenvolvedor que alterou o código interno das métricas e quer garantir que a matemática ou a detecção de bugs continua funcionando, utilize a suíte de testes do Maven:
+This performs the full processing pipeline and displays the **Analysis Summary** with the readability ranking on your screen.
+
+### 2. Test the Source Code (Automated Tests)
+If you are a developer who modified internal metric logic and want to ensure the scoring math or bug detection still works correctly, use Maven's test suite:
 
 ```bash
 mvn test
 ```
-Este comando **não** imprime a tabela do ranking na tela. Ele apenas roda validações silenciosas (Testes Unitários da pasta `src/test/...`) usando os arquivos da pasta `samples` para garantir que o sistema de notas da ferramenta continua confiável e sem erros no código.
+
+This command does **not** print a ranking table. It silently runs validations (Unit Tests located in `src/test/...`) using the files in the `samples` folder to confirm that the tool's scoring system remains reliable and error-free.
 
 ---
-## 📁 Estrutura de Arquivos
 
-### **Configuração e Construção**
+## 5. File Structure
+
+### **Configuration and Build**
 
 #### `pom.xml`
-Define as dependências do projeto e configuração do Maven:
-- **JavaParser 3.25.10**: Biblioteca para análise de código Java em AST (Abstract Syntax Tree)
-- **Gson 2.10.1**: Serialização de dados para JSON
-- **JUnit 5**: Framework de testes
-- **Maven Shade Plugin**: Cria um fat jar executável com todas as dependências
+Defines project dependencies and Maven configuration:
+- **JavaParser 3.25.10**: Library for parsing Java code into an AST (Abstract Syntax Tree)
+- **Gson 2.10.1**: Data serialization to JSON
+- **JUnit 5**: Testing framework
+- **Maven Shade Plugin**: Creates an executable fat JAR with all dependencies
 
-**Classe principal definida:** `readability.Main`
+**Main class defined:** `readability.Main`
 
 ---
 
-### **Código Principal**
+### **Main Source Code**
 
 #### `src/main/java/readability/Main.java`
-**Ponto de entrada da aplicação.**
+**Application entry point.**
 
-**O que faz:**
-- Recebe um caminho como argumento (arquivo `.java` ou diretório)
-- Se for arquivo único: analisa apenas ele
-- Se for diretório: percorre recursivamente encontrando todos os `.java`
-- Exibe progresso em tempo real: `[X/Y] arquivo.java`
-- Trata erros graciosamente sem interromper a análise
-- Imprime resumo final com scores de cada arquivo
+**What it does:**
+- Accepts a path as an argument (a `.java` file or a directory)
+- If a single file: analyzes only that file
+- If a directory: recursively walks it and finds all `.java` files
+- Displays real-time progress: `[X/Y] file.java`
+- Handles errors gracefully without interrupting the analysis
+- Prints a final summary with the score of each file
 
-**Exemplo de uso:**
+**Example usage:**
 ```bash
-java -jar legibilidade.jar /meu/projeto
+java -jar legibilidade.jar /my/project
 ```
 
 ---
 
 #### `src/main/java/readability/analyzer/FileAnalyzer.java`
-**Orquestrador de análise de um arquivo.**
+**Orchestrates the analysis of a single file.**
 
-**O que faz:**
-- Recebe um `Path` para um arquivo `.java`
-- Usa `StaticJavaParser.parse(file)` para converter o arquivo em AST (Abstract Syntax Tree)
-- Executa todos os visitors registrados (F1, F2, F3, etc)
-- Coleta os `FeatureResult` de cada visitor
-- Retorna um `FileReport` completo
-- Em caso de erro de parse: loga `[SKIP] arquivo.java` e retorna relatório com `parseable=false`
+**What it does:**
+- Receives a `Path` pointing to a `.java` file
+- Uses `StaticJavaParser.parse(file)` to convert the file into an AST
+- Runs all registered visitors (F1, F2, F3, etc.)
+- Collects the `FeatureResult` from each visitor
+- Returns a complete `FileReport`
+- On parse error: logs `[SKIP] file.java` and returns a report with `parseable=false`
 
-**Responsabilidades:**
-- Parsing seguro
-- Integração de visitors
-- Tratamento de exceções
+**Responsibilities:**
+- Safe parsing
+- Visitor integration
+- Exception handling
 
 ---
 
-### **Modelos de Dados**
+### **Data Models**
 
 #### `src/main/java/readability/model/FeatureResult.java`
-**Resultado da análise de uma single feature.**
+**Result of analyzing a single feature.**
 
-**Campos:**
-- `int violations`: Número de violações encontradas
-- `int opportunities`: Número total de oportunidades onde a métrica se aplica
-- `double score`: Percentual calculado (0-100%)
-- `int featureId`: Qual feature (1-5) gerou este resultado
+**Fields:**
+- `int violations`: Number of violations found
+- `int opportunities`: Total number of opportunities where the metric applies
+- `double score`: Calculated percentage (0–100%)
+- `int featureId`: Which feature (1–5) produced this result
 
-**Características:**
-- Imutável e thread-safe
-- Score automaticamente clamped entre [0, 100]
-- Construtores sobrecarregados para compatibilidade
+**Characteristics:**
+- Immutable and thread-safe
+- Score is automatically clamped to [0, 100]
+- Overloaded constructors for compatibility
 
-**Exemplo:**
+**Example:**
 ```java
 new FeatureResult(3, 10, 70.0, 1)
-// 3 violações em 10 oportunidades = score 70%
+// 3 violations out of 10 opportunities = 70% score
 ```
 
 ---
 
 #### `src/main/java/readability/model/FileReport.java`
-**Relatório completo de análise de um arquivo.**
+**Complete analysis report for a single file.**
 
-**Campos:**
-- `String filePath`: Caminho do arquivo analisado
-- `List<FeatureResult> features`: Lista com exatamente 5 features (F1 a F5)
-- `boolean parseable`: Se o arquivo foi parseado com sucesso
-- `double finalScore`: Score final consolidado (calculado pelo ScoreCalculator na Phase 2)
+**Fields:**
+- `String filePath`: Path to the analyzed file
+- `List<FeatureResult> features`: List of exactly 5 features (F1 to F5)
+- `boolean parseable`: Whether the file was parsed successfully
+- `double finalScore`: Consolidated final score (calculated by ScoreCalculator in Phase 2)
 
-**Características:**
-- Permite rastreamento de arquivos que falharam no parse
-- Agrupa todos os resultados de um arquivo
-- Suporta adição posterior do score final
+**Characteristics:**
+- Tracks files that failed to parse
+- Groups all results for a file
+- Supports adding the final score after the fact
 
 ---
 
-### **Visitors (Análise de Métricas)**
+### **Visitors (Metric Analysis)**
 
 #### `src/main/java/readability/visitors/FeatureVisitor.java`
-**Interface comum para todos os visitors.**
+**Common interface for all visitors.**
 
-**Métodos que todo visitor deve implementar:**
-- `FeatureResult analyze(CompilationUnit ast)`: Analisa o AST e retorna resultado
-- `int getFeatureId()`: Retorna 1-5 identificando qual feature
-- `String getFeatureName()`: Nome legível da feature (ex: "Hidden Braces (F1)")
+**Methods every visitor must implement:**
+- `FeatureResult analyze(CompilationUnit ast)`: Analyzes the AST and returns a result
+- `int getFeatureId()`: Returns 1–5 identifying which feature this is
+- `String getFeatureName()`: Human-readable feature name (e.g., `"Hidden Braces (F1)"`)
 
-**Propósito:**
-- Garantir interface consistente
-- Permitir registro dinâmico de visitors
-- Facilitar integração no Phase 3
+**Purpose:**
+- Enforce a consistent interface
+- Enable dynamic visitor registration
+- Simplify integration in Phase 3
 
 ---
 
 #### `src/main/java/readability/visitors/F1HiddenBracesVisitor.java`
-**Feature 1: Detecção de Chaves Omitidas**
+**Feature 1: Missing Braces Detection**
 
-**O que mede:**
-- Estruturas de controle (`if`, `for`, `while`, `foreach`) que não usam chaves `{}`
-- Chaves são obrigatórias para boa legibilidade e evitar erros
+**What it measures:**
+- Control flow structures (`if`, `for`, `while`, `foreach`) that omit curly braces `{}`
+- Braces are required for good readability and to avoid subtle bugs
 
-**Lógica de contagem:**
-- **If Statement:** +1 oportunidade se tem then, +1 se tem else (exceto else-if)
-- **For Loop:** +1 oportunidade por loop
-- **ForEach Loop:** +1 oportunidade por loop
-- **While Loop:** +1 oportunidade por loop
+**Counting logic:**
+- **If Statement:** +1 opportunity for the then-branch, +1 if there is an else (except else-if chains)
+- **For Loop:** +1 opportunity per loop
+- **ForEach Loop:** +1 opportunity per loop
+- **While Loop:** +1 opportunity per loop
+- **Violation:** Counted when the body is not a `BlockStmt` (i.e., has no braces)
 
-- **Violação:** Contada quando o corpo não é `BlockStmt` (não tem chaves)
-
-**Fórmula de score:**
+**Score formula:**
 ```
-Se opportunities == 0: score = 100% (nenhuma estrutura de controle)
-Senão: score = 100 × (1 - violations/opportunities)
+If opportunities == 0: score = 100% (no control flow structures present)
+Otherwise:             score = 100 × (1 - violations / opportunities)
 ```
 
-**Exemplos:**
+**Examples:**
 
-✅ **Bom (100% F1):**
+**Good (100% F1):**
 ```java
 if (x > 5) {
     System.out.println("OK");
 }
 ```
 
-❌ **Ruim (0% F1):**
+❌ **Bad (0% F1):**
 ```java
 if (x > 5)
     System.out.println("OK");
@@ -268,145 +270,144 @@ if (x > 5)
 ---
 
 #### `src/main/java/readability/visitors/VisitorRegistry.java`
-**Registro central de todos os visitors.**
+**Central registry for all visitors.**
 
-**O que faz:**
-- Mantém lista estática de todos os visitors (F1 a F5)
-- Executa `analyze()` em cada visitor para um AST dado
-- Retorna lista ordenada de resultados
-- Permite registro dinâmico via `registerVisitor()`
+**What it does:**
+- Maintains a static list of all visitors (F1 to F5)
+- Calls `analyze()` on each visitor for a given AST
+- Returns an ordered list of results
+- Allows dynamic registration via `registerVisitor()`
 
-**Phase 1:** Apenas F1 registrado
-**Phase 2:** Colegas registram F2, F3, F4, F5
-**Phase 3:** Todos os 5 visitors integrados e validados
+**Phase 1:** Only F1 registered
+**Phase 2:** Teammates register F2, F3, F4, F5
+**Phase 3:** All 5 visitors integrated and validated
 
 ---
 
-### **Samples para Teste**
+### **Sample Files for Testing**
 
 #### `samples/F1Good.java`
-**Exemplo de código bem estruturado - Score esperado: 100%**
+**Example of well-structured code — Expected score: 100%**
 
-**Características:**
-- Todos os `if`, `for`, `while` usam chaves `{}`
-- 3 métodos com lógica real:
-  - `validateEmail()`: Validação de string
-  - `countValidUsers()`: Loop com condição
-  - `processData()`: Loops aninhados com else-if
-- Código legível e sem ambiguidades
+**Characteristics:**
+- All `if`, `for`, and `while` statements use braces `{}`
+- 3 methods with real logic:
+  - `validateEmail()`: String validation
+  - `countValidUsers()`: Loop with a condition
+  - `processData()`: Nested loops with else-if
+- Readable, unambiguous code
 
-**Resultado:** F1 = 100%
+**Result:** F1 = 100%
 
 ---
 
 #### `samples/F1Bad.java`
-**Exemplo de código com problemas - Score esperado: próximo de 0%**
+**Example of problematic code — Expected score: near 0%**
 
-**Características:**
-- Praticamente todas as estruturas omitem chaves
-- **Mesma lógica** do F1Good mas com estilo ruim
-- Demonstra risco de dangling else
-- Código difícil de ler e manter
+**Characteristics:**
+- Nearly all control structures omit braces
+- **Same logic** as F1Good but written in a poor style
+- Demonstrates the dangling-else risk
+- Hard to read and maintain
 
-**Resultado:** F1 ≈ 0%
+**Result:** F1 ≈ 0%
 
 ---
 
-## 🔄 Fluxo de Execução
+## 6. Execution Flow
 
 ```
-1. User executa: java -jar legibilidade.jar <path>
+1. User runs: java -jar legibilidade.jar <path>
                            ↓
 2. Main.java
-   - Descobre arquivos .java (único ou recursivo)
-   - Exibe [X/Y] para cada arquivo
+   - Discovers .java files (single file or recursive)
+   - Displays [X/Y] for each file
                            ↓
 3. FileAnalyzer.analyze(path)
-   - Parse com StaticJavaParser
-   - Chama VisitorRegistry.analyzeFile(ast)
+   - Parses with StaticJavaParser
+   - Calls VisitorRegistry.analyzeFile(ast)
                            ↓
 4. VisitorRegistry.analyzeFile(ast)
-   - Executa visitor.analyze(ast) para cada visitor registrado
-   - Coleta FeatureResult de cada um
+   - Calls visitor.analyze(ast) for each registered visitor
+   - Collects FeatureResult from each
                            ↓
 5. F1HiddenBracesVisitor.analyze(ast)
-   - Visita IfStmt, ForStmt, ForEachStmt, WhileStmt
-   - Conta violations e opportunities
-   - Calcula score
-   - Retorna FeatureResult
+   - Visits IfStmt, ForStmt, ForEachStmt, WhileStmt
+   - Counts violations and opportunities
+   - Calculates score
+   - Returns FeatureResult
                            ↓
 6. Main.java
-   - Imprime resumo final com scores
-   - Calcula médias
+   - Prints final summary with scores
+   - Calculates averages
 ```
 
 ---
 
-## 🏗️ Fases do Projeto
+## 7. Project Phases
 
-### **Phase 1 - Base (Pessoa 1)**
-- ✅ Configuração Maven (pom.xml)
-- ✅ Modelos (FeatureResult, FileReport)
-- ✅ Main.java
-- ✅ FileAnalyzer.java
-- ✅ F1HiddenBracesVisitor.java
-- ✅ Samples (F1Good.java, F1Bad.java)
+### **Phase 1 — Foundation (Person 1)**
+- Maven setup (`pom.xml`)
+- Models (`FeatureResult`, `FileReport`)
+- `Main.java`
+- `FileAnalyzer.java`
+- `F1HiddenBracesVisitor.java`
+- Samples (`F1Good.java`, `F1Bad.java`)
 
-### **Phase 2 - Paralelo (Pessoas 2, 3, 4, 5)**
-- Pessoa 2: F2 + ScoreCalculator
-- Pessoa 3: F3 + ReportWriter
-- Pessoa 4: F4 + JUnit tests
-- Pessoa 5: F5 + Validação empírica
+### **Phase 2 — Parallel Development (Persons 2, 3, 4, 5)**
+- Person 2: F2 + ScoreCalculator
+- Person 3: F3 + ReportWriter
+- Person 4: F4 + JUnit tests
+- Person 5: F5 + Empirical validation
 
-### **Phase 3 - Integração (Pessoa 1)**
-- Puxa todos os visitors para FileAnalyzer
-- Smoke test com samples
-- Resolve divergências de score
+### **Phase 3 — Integration (Person 1)**
+- Pulls all visitors into `FileAnalyzer`
+- Smoke test with samples
+- Resolves any score discrepancies
 
-### **Phase 4 - Validação (Pessoa 5)**
-- Executa em repositórios externos
-- Coleta dados do survey
-- Documenta resultados
+### **Phase 4 — Validation (Person 5)**
+- Runs the tool on external repositories
+- Collects survey data
+- Documents results
 
 ---
 
-## 🛠️ Desenvolvimento Local
+## 8. Local Development
 
-### Compilar e executar testes
+### Compile and run tests
 ```bash
 mvn clean test
 ```
 
-### Executar apenas compilação
+### Compile only
 ```bash
 mvn compile
 ```
 
-### Limpar arquivos compilados
+### Clean compiled files
 ```bash
 mvn clean
 ```
 
-### Gerar fat jar
+### Generate fat JAR
 ```bash
 mvn package
 ```
 
 ---
 
-## 📊 Interpretação de Resultados
+## 9. Score Interpretation
 
-| F1 Score | Interpretação | Ação |
-|----------|---------------|------|
-| 100% | Excelente - Todas as chaves presentes | Manter padrão |
-| 80-99% | Bom - Pouquíssimas omissões | Revisar pontos faltantes |
-| 50-79% | Regular - Muitas omissões | Refatorar com chaves |
-| 20-49% | Ruim - Maioria sem chaves | Refatoração urgente |
-| 0-19% | Péssimo - Praticamente sem chaves | Completar refatoração |
+| F1 Score | Interpretation | Recommended Action |
+|----------|----------------|--------------------|
+| 100% | Excellent — All braces present | Maintain the standard |
+| 80–99% | Good — Very few omissions | Review the missing spots |
+| 50–79% | Fair — Many omissions | Refactor to add braces |
+| 20–49% | Poor — Most blocks lack braces | Urgent refactoring needed |
+| 0–19% | Very poor — Almost no braces | Complete refactoring required |
 
 ---
 
+## 10. License
 
-## 📝 Licença
-
-Este projeto está sob licença MIT.
+This project is licensed under the MIT License.

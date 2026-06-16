@@ -1,6 +1,6 @@
-# Code Readability Metric - Java Code Readability Analyzer
+# Code Readability Metric — Java Code Readability Analyzer
 
-A Java code analyzer that measures readability through 5 different metrics (F1 to F5). This project was developed in collaborative phases, starting with Feature 1 (F1), which detects missing braces in control flow structures.
+A Java code analyzer that measures readability through 5 metrics (F1 to F5), based on the Buse & Weimer model. The tool parses Java source files into an Abstract Syntax Tree (AST), applies each metric visitor, and produces a ranked report with per-file and per-feature scores.
 
 ## 1. Prerequisites
 
@@ -18,9 +18,7 @@ Before running the project, make sure you have the following installed:
    - **Download:** https://maven.apache.org/download.cgi
    - **Installation (Linux/Mac):**
      ```bash
-     # Extract the archive
      tar -xzf apache-maven-3.x.x-bin.tar.gz
-     # Add to PATH
      export PATH=$PATH:/path/to/apache-maven-3.x.x/bin
      ```
    - **Verify installation:**
@@ -71,21 +69,21 @@ Found 4 Java files to analyze
 
 === ANALYSIS SUMMARY ===
 
-Top 10 worst files by final score:
-File                                                         | Score
+Ranking of archives by final score (worst to best):
+Archive                                                      | Score
 -------------------------------------------------------------------------
-samples\F1Bad.java                                           | 50.00
-samples\F3Bad.java                                           | 84.38
-samples\F1Good.java                                          | 100.00
-samples\F3Good.java                                          | 100.00
+samples/F1Bad.java                                           | 50.00
+samples/F3Bad.java                                           | 84.38
+samples/F1Good.java                                          | 100.00
+samples/F3Good.java                                          | 100.00
 
-Repository average score: 83.59
+Repository's average score: 83.59
 
-Score distribution:
-90-100:    2
-70-89:     1
-50-69:     1
-Below 50:  0
+Score's Distribution:
+90-100:       2
+70-89:        1
+50-69:        1
+Below 50:     0
 =========================
 ```
 
@@ -96,29 +94,27 @@ In addition to the console summary, the analyzer generates a `report.json` file 
 
 ## 4. How to Test the Tool
 
-There are two approaches to "testing" this project, depending on your goal:
-
 ### 1. Test the Final Product (Real Analysis)
-If you want to see the tool in action — computing metrics for a code folder and printing the final ranking table (e.g., evaluating the `samples` folder) — build the executable and run the project:
+Build the executable and run the project against a folder:
 
 ```bash
-# 1. Package the tool (generates the .jar file)
+# Package the tool (generates the .jar file)
 mvn package
 
-# 2. Run the analysis on the desired folder
+# Run the analysis on the desired folder
 java -jar target/legibilidade.jar samples/
 ```
 
-This performs the full processing pipeline and displays the **Analysis Summary** with the readability ranking on your screen.
+This performs the full processing pipeline and displays the **Analysis Summary** with the readability ranking.
 
 ### 2. Test the Source Code (Automated Tests)
-If you are a developer who modified internal metric logic and want to ensure the scoring math or bug detection still works correctly, use Maven's test suite:
+Run Maven's test suite to verify the scoring logic for all 5 features:
 
 ```bash
 mvn test
 ```
 
-This command does **not** print a ranking table. It silently runs validations (Unit Tests located in `src/test/...`) using the files in the `samples` folder to confirm that the tool's scoring system remains reliable and error-free.
+Unit tests are located in `src/test/java/readability/visitors/` (one test class per feature: F1Test through F5Test) and `src/test/java/readability/report/ReportWriterTest.java`.
 
 ---
 
@@ -128,10 +124,10 @@ This command does **not** print a ranking table. It silently runs validations (U
 
 #### `pom.xml`
 Defines project dependencies and Maven configuration:
-- **JavaParser 3.25.10**: Library for parsing Java code into an AST (Abstract Syntax Tree)
-- **Gson 2.10.1**: Data serialization to JSON
+- **JavaParser 3.25.10**: Parses Java source code into an AST
+- **Gson 2.10.1**: Serializes reports to JSON
 - **JUnit 5**: Testing framework
-- **Maven Shade Plugin**: Creates an executable fat JAR with all dependencies
+- **Maven Shade Plugin**: Creates an executable fat JAR
 
 **Main class defined:** `readability.Main`
 
@@ -142,36 +138,38 @@ Defines project dependencies and Maven configuration:
 #### `src/main/java/readability/Main.java`
 **Application entry point.**
 
-**What it does:**
 - Accepts a path as an argument (a `.java` file or a directory)
 - If a single file: analyzes only that file
-- If a directory: recursively walks it and finds all `.java` files
+- If a directory: recursively finds all `.java` files
 - Displays real-time progress: `[X/Y] file.java`
-- Handles errors gracefully without interrupting the analysis
-- Prints a final summary with the score of each file
-
-**Example usage:**
-```bash
-java -jar legibilidade.jar /my/project
-```
+- Delegates to `FileAnalyzer`, `ScoreCalculator`, and `ReportWriter`
 
 ---
 
 #### `src/main/java/readability/analyzer/FileAnalyzer.java`
 **Orchestrates the analysis of a single file.**
 
-**What it does:**
-- Receives a `Path` pointing to a `.java` file
-- Uses `StaticJavaParser.parse(file)` to convert the file into an AST
-- Runs all registered visitors (F1, F2, F3, etc.)
-- Collects the `FeatureResult` from each visitor
+- Parses the file with `StaticJavaParser.parse()`
+- Runs all registered visitors (F1–F5) via `VisitorRegistry`
 - Returns a complete `FileReport`
-- On parse error: logs `[SKIP] file.java` and returns a report with `parseable=false`
+- On parse error: logs `[SKIP] file.java` and marks `parseable=false`
 
-**Responsibilities:**
-- Safe parsing
-- Visitor integration
-- Exception handling
+---
+
+#### `src/main/java/readability/score/ScoreCalculator.java`
+**Calculates the final readability score for a file.**
+
+- Applies the Buse & Weimer formula: `score = 100 × (1 − violations / opportunities)`
+- If `opportunities == 0`, the score defaults to 100
+- The `finalScore` is the arithmetic mean of all 5 feature scores
+
+---
+
+#### `src/main/java/readability/report/ReportWriter.java`
+**Produces analysis output.**
+
+- Writes a pretty-printed JSON file (`report.json`) with all file and feature details
+- Prints the console summary: ranked table, average score, and score distribution
 
 ---
 
@@ -180,38 +178,26 @@ java -jar legibilidade.jar /my/project
 #### `src/main/java/readability/model/FeatureResult.java`
 **Result of analyzing a single feature.**
 
-**Fields:**
-- `int violations`: Number of violations found
-- `int opportunities`: Total number of opportunities where the metric applies
-- `double score`: Calculated percentage (0–100%)
-- `int featureId`: Which feature (1–5) produced this result
+| Field | Description |
+|-------|-------------|
+| `int violations` | Number of violations found |
+| `int opportunities` | Total opportunities where the metric applies |
+| `double score` | Calculated percentage (0–100) |
+| `int featureId` | Which feature (1–5) produced this result |
 
-**Characteristics:**
-- Immutable and thread-safe
-- Score is automatically clamped to [0, 100]
-- Overloaded constructors for compatibility
-
-**Example:**
-```java
-new FeatureResult(3, 10, 70.0, 1)
-// 3 violations out of 10 opportunities = 70% score
-```
+Score is automatically clamped to [0, 100].
 
 ---
 
 #### `src/main/java/readability/model/FileReport.java`
 **Complete analysis report for a single file.**
 
-**Fields:**
-- `String filePath`: Path to the analyzed file
-- `List<FeatureResult> features`: List of exactly 5 features (F1 to F5)
-- `boolean parseable`: Whether the file was parsed successfully
-- `double finalScore`: Consolidated final score (calculated by ScoreCalculator in Phase 2)
-
-**Characteristics:**
-- Tracks files that failed to parse
-- Groups all results for a file
-- Supports adding the final score after the fact
+| Field | Description |
+|-------|-------------|
+| `String filePath` | Path to the analyzed file |
+| `List<FeatureResult> features` | Results for F1–F5 |
+| `boolean parseable` | Whether the file was parsed successfully |
+| `double finalScore` | Arithmetic mean of all feature scores |
 
 ---
 
@@ -220,51 +206,122 @@ new FeatureResult(3, 10, 70.0, 1)
 #### `src/main/java/readability/visitors/FeatureVisitor.java`
 **Common interface for all visitors.**
 
-**Methods every visitor must implement:**
-- `FeatureResult analyze(CompilationUnit ast)`: Analyzes the AST and returns a result
-- `int getFeatureId()`: Returns 1–5 identifying which feature this is
-- `String getFeatureName()`: Human-readable feature name (e.g., `"Hidden Braces (F1)"`)
-
-**Purpose:**
-- Enforce a consistent interface
-- Enable dynamic visitor registration
-- Simplify integration in Phase 3
+Every visitor must implement:
+- `FeatureResult analyze(CompilationUnit ast)`: runs the metric on the AST
+- `int getFeatureId()`: returns 1–5
+- `String getFeatureName()`: human-readable name (e.g., `"Hidden Braces (F1)"`)
 
 ---
 
 #### `src/main/java/readability/visitors/F1HiddenBracesVisitor.java`
-**Feature 1: Missing Braces Detection**
+**Feature 1: Missing Braces**
 
-**What it measures:**
-- Control flow structures (`if`, `for`, `while`, `foreach`) that omit curly braces `{}`
-- Braces are required for good readability and to avoid subtle bugs
+Detects control flow structures (`if`, `for`, `foreach`, `while`) that omit curly braces `{}`.
 
-**Counting logic:**
-- **If Statement:** +1 opportunity for the then-branch, +1 if there is an else (except else-if chains)
-- **For Loop:** +1 opportunity per loop
-- **ForEach Loop:** +1 opportunity per loop
-- **While Loop:** +1 opportunity per loop
-- **Violation:** Counted when the body is not a `BlockStmt` (i.e., has no braces)
+| Structure | Opportunities counted |
+|-----------|-----------------------|
+| `if` | +1 for then-branch, +1 if `else` present (except `else if` chains) |
+| `for` / `foreach` / `while` | +1 per loop |
 
-**Score formula:**
-```
-If opportunities == 0: score = 100% (no control flow structures present)
-Otherwise:             score = 100 × (1 - violations / opportunities)
-```
+**Violation:** body is not a `BlockStmt` (no braces).
 
-**Examples:**
-
-**Good (100% F1):**
 ```java
+// Good (score 100%)
 if (x > 5) {
     System.out.println("OK");
 }
-```
 
-❌ **Bad (0% F1):**
-```java
+// Bad (violation)
 if (x > 5)
     System.out.println("OK");
+```
+
+---
+
+#### `src/main/java/readability/visitors/F2EmbeddedAssignVisitor.java`
+**Feature 2: Embedded Assignments**
+
+Detects assignments (`=`) and increment/decrement operators (`++`/`--`) embedded inside the conditional expressions of `if`, `while`, and `for` statements.
+
+| Structure | Opportunity |
+|-----------|-------------|
+| `if` / `while` | +1 per conditional |
+| `for` | +1 if a compare expression is present |
+
+**Violation:** an `AssignExpr` or increment/decrement `UnaryExpr` is found inside the condition.
+
+```java
+// Good (score 100%)
+int x = getValue();
+if (x > 0) { ... }
+
+// Bad (violation)
+if ((x = getValue()) > 0) { ... }
+```
+
+---
+
+#### `src/main/java/readability/visitors/F3OperatorsPerLineVisitor.java`
+**Feature 3: Operators Per Line**
+
+Counts binary and unary operator occurrences per source line. Any line with **3 or more operators** is a violation.
+
+- **Opportunity:** every source line that contains at least one operator
+- **Violation:** line with ≥ 3 operators
+
+```java
+// Good (score 100%)
+boolean valid = age >= 18 && active;
+
+// Bad (violation — 4 operators on one line)
+boolean valid = a > 0 && b < 10 && c != 0 || d == 1;
+```
+
+---
+
+#### `src/main/java/readability/visitors/F4NestingDepthVisitor.java`
+**Feature 4: Nesting Depth**
+
+For each method, computes the maximum control-flow nesting depth. Methods with a max depth **greater than 2** are considered violations.
+
+- **Opportunity:** every method declaration
+- **Violation:** method whose max depth exceeds 2
+- Counted structures: `if`, `for`, `foreach`, `while`, `do`, `switch`
+
+```java
+// Good (depth 2, score 100%)
+void process() {
+    for (int i = 0; i < n; i++) {  // depth 2
+        doWork(i);
+    }
+}
+
+// Bad (depth 3, violation)
+void process() {
+    for (int i = 0; i < n; i++) {   // depth 2
+        if (condition) {             // depth 3 — violation
+            doWork(i);
+        }
+    }
+}
+```
+
+---
+
+#### `src/main/java/readability/visitors/F5ParameterCountVisitor.java`
+**Feature 5: Parameter Count**
+
+Detects methods and constructors with **more than 3 parameters**, which hurts readability and testability.
+
+- **Opportunity:** every method or constructor declaration
+- **Violation:** more than 3 parameters
+
+```java
+// Good (score 100%)
+void save(User user, Database db) { ... }
+
+// Bad (violation — 4 parameters)
+void save(String name, String email, int age, String role) { ... }
 ```
 
 ---
@@ -272,45 +329,27 @@ if (x > 5)
 #### `src/main/java/readability/visitors/VisitorRegistry.java`
 **Central registry for all visitors.**
 
-**What it does:**
-- Maintains a static list of all visitors (F1 to F5)
-- Calls `analyze()` on each visitor for a given AST
-- Returns an ordered list of results
-- Allows dynamic registration via `registerVisitor()`
-
-**Phase 1:** Only F1 registered
-**Phase 2:** Teammates register F2, F3, F4, F5
-**Phase 3:** All 5 visitors integrated and validated
+- Maintains the list of all 5 visitors
+- Calls `analyze()` on each for a given AST
+- Returns an ordered list of `FeatureResult` objects
 
 ---
 
-### **Sample Files for Testing**
+### **Sample Files**
 
-#### `samples/F1Good.java`
-**Example of well-structured code — Expected score: 100%**
-
-**Characteristics:**
-- All `if`, `for`, and `while` statements use braces `{}`
-- 3 methods with real logic:
-  - `validateEmail()`: String validation
-  - `countValidUsers()`: Loop with a condition
-  - `processData()`: Nested loops with else-if
-- Readable, unambiguous code
-
-**Result:** F1 = 100%
-
----
-
-#### `samples/F1Bad.java`
-**Example of problematic code — Expected score: near 0%**
-
-**Characteristics:**
-- Nearly all control structures omit braces
-- **Same logic** as F1Good but written in a poor style
-- Demonstrates the dangling-else risk
-- Hard to read and maintain
-
-**Result:** F1 ≈ 0%
+| File | Description | Expected F-Score |
+|------|-------------|-----------------|
+| `samples/F1Good.java` | All control structures use braces | F1 = 100% |
+| `samples/F1Bad.java` | Nearly all control structures lack braces | F1 ≈ 0% |
+| `samples/F2Good.java` | No embedded assignments in conditions | F2 = 100% |
+| `samples/F2Bad.java` | Assignments and `++`/`--` inside conditions | F2 ≈ 0% |
+| `samples/F3Good.java` | All lines have fewer than 3 operators | F3 = 100% |
+| `samples/F3Bad.java` | Multiple lines with ≥ 3 operators | F3 ≈ 0% |
+| `samples/F4Good.java` | All methods have nesting depth ≤ 2 | F4 = 100% |
+| `samples/F4Bad.java` | Methods with nesting depth > 2 | F4 ≈ 0% |
+| `samples/F5Good.java` | All methods have ≤ 3 parameters | F5 = 100% |
+| `samples/F5Bad.java` | Methods with more than 3 parameters | F5 ≈ 0% |
+| `samples/real/` | Real-world Java files for empirical validation | Mixed |
 
 ---
 
@@ -318,28 +357,31 @@ if (x > 5)
 
 ```
 1. User runs: java -jar legibilidade.jar <path>
-                           ↓
+                       ↓
 2. Main.java
    - Discovers .java files (single file or recursive)
    - Displays [X/Y] for each file
-                           ↓
+                       ↓
 3. FileAnalyzer.analyze(path)
    - Parses with StaticJavaParser
    - Calls VisitorRegistry.analyzeFile(ast)
-                           ↓
+                       ↓
 4. VisitorRegistry.analyzeFile(ast)
-   - Calls visitor.analyze(ast) for each registered visitor
+   - Calls visitor.analyze(ast) for each of the 5 registered visitors
    - Collects FeatureResult from each
-                           ↓
-5. F1HiddenBracesVisitor.analyze(ast)
-   - Visits IfStmt, ForStmt, ForEachStmt, WhileStmt
-   - Counts violations and opportunities
-   - Calculates score
-   - Returns FeatureResult
-                           ↓
-6. Main.java
-   - Prints final summary with scores
-   - Calculates averages
+                       ↓
+5. Visitors F1–F5 each:
+   - Traverse the AST
+   - Count violations and opportunities
+   - Return FeatureResult with score
+                       ↓
+6. ScoreCalculator.calculate(report)
+   - Computes per-feature scores
+   - Sets finalScore = arithmetic mean of F1–F5
+                       ↓
+7. ReportWriter.writeReports(reports, outputPath)
+   - Writes report.json
+   - Prints console summary (ranking, average, distribution)
 ```
 
 ---
@@ -398,13 +440,15 @@ mvn package
 
 ## 9. Score Interpretation
 
-| F1 Score | Interpretation | Recommended Action |
-|----------|----------------|--------------------|
-| 100% | Excellent — All braces present | Maintain the standard |
-| 80–99% | Good — Very few omissions | Review the missing spots |
-| 50–79% | Fair — Many omissions | Refactor to add braces |
-| 20–49% | Poor — Most blocks lack braces | Urgent refactoring needed |
-| 0–19% | Very poor — Almost no braces | Complete refactoring required |
+Each feature produces a score from 0% to 100%. The `finalScore` is the arithmetic mean of all five.
+
+| Score Range | Interpretation | Recommended Action |
+|-------------|----------------|--------------------|
+| 90–100% | Excellent | Maintain the standard |
+| 70–89% | Good | Review remaining violations |
+| 50–69% | Fair | Refactor to fix violations |
+| 20–49% | Poor | Urgent refactoring needed |
+| 0–19% | Very poor | Complete refactoring required |
 
 ---
 

@@ -4,6 +4,9 @@ import readability.analyzer.FileAnalyzer;
 import readability.model.FileReport;
 import readability.report.ReportWriter;
 
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ParserConfiguration;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +32,9 @@ import java.util.stream.Stream;
 public class Main {
 
     public static void main(String[] args) {
+        // Configure JavaParser to support Java 17 features (like records)
+        StaticJavaParser.getParserConfiguration().setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_17);
+
         if (args.length == 0) {
             System.out.println("Usage: java -jar legibilidade.jar <path>");
             System.out.println("  <path> - a Java file or directory to scan");

@@ -58,7 +58,7 @@ class ReportWriterTest {
 
         // Verify that the report was also generated correctly in the console.
         String consoleOutput = outContent.toString();
-        assertTrue(consoleOutput.contains("=== RESUMO DA ANÁLISE ==="));
+        assertTrue(consoleOutput.contains("=== ANALYSIS SUMMARY ==="));
         assertTrue(consoleOutput.contains("File1.java"));
         assertTrue(consoleOutput.contains("File2.java"));
     }
